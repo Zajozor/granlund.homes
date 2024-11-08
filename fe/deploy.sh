@@ -1,0 +1,21 @@
+#/bin/sh
+
+out() { echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&1; }
+err() { echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2; }
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+reset_dir() {
+    cd "$SCRIPT_DIR"
+}
+
+out "deploying frontend"
+reset_dir
+
+out "pulling latest"
+git pull
+out "building npm"
+npm run build
+out "copying over"
+scp -r build/* root@sidekala:/var/www/granlund.homes/
+
+
+
