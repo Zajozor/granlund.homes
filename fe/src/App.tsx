@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import CreateBuilding from "./pages/CreateBuilding";
 import EditBuilding from "./pages/EditBuilding";
 import BuildingsList from "./pages/BuildingList";
+import ViewItems from "./pages/ViewItems";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/properties" element={<BuildingsList />} />
         <Route path="/properties/create" element={<CreateBuilding />} />
         <Route path="/properties/edit/:id" element={<EditBuilding />} />
+        <Route path="/properties/:id/items" element={<ViewItems />} />
         <Route path="*" element={<Navigate to="/properties" />} />
       </Routes>
     </>

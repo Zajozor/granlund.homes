@@ -4,7 +4,7 @@
 import request from 'supertest';
 import app from '../../index';
 import { describe, expect, it } from '@jest/globals';
-import newPropertyImage from './data/create-property.jpeg'
+import newPropertyImage from './data/create-property.jpeg';
 
 describe('Frontend needs these API specs to remain unchanged', () => {
   it('should return Hello, Hackathon!', async () => {
@@ -21,30 +21,46 @@ describe('Frontend needs these API specs to remain unchanged', () => {
       expect(property).toHaveProperty('address');
     });
   });
-  it('One property', async () => {
-    const response = await request(app).get('/properties:1');
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty(['property', 'items']);
+});
+it('Create and view a property', async () => {
+  const newProperty = {
+    address: '1234 Elm St',
+    image: newPropertyImage
+  };
+  const response = await request(app).post('/properties').send(newProperty);
 
-    expect(typeof response.body.property.id).toBe(String);
-    expect(typeof response.body.property.address).toBe(String);
-    expect(typeof response.body.property.image).toBeDefined();
-    
-    expect(response.body.items).toHaveProperty(['electric', 'hvac', 'plumbing', 'utilities', 'structural', 'appliances', 'landscaping', 'security', 'other']);
-    expect(typeof response.body.items.electric[0]).toHaveProperty(['coordinates','name', 'installationDate', 'serialNumber']);
-    expect(typeof response.body.items.electric[0].coordinates).toBe(String);
-    expect(typeof response.body.items.electric[0].name).toBe(String);
-    expect(typeof response.body.items.electric[0].serialNumber).toBe(String);
-    expect(typeof response.body.items.electric[0].installationDate).toBe(Date);
-  });
-  it('Create a property', async () => {
-    const newProperty = {
-      address: '1234 Elm St',
-      image: newPropertyImage
-    };
-    const response = await request(app).post('/properties/create').send(newProperty);
+  expect(response.status).toBe(200);
+  expect(response.body).toHaveProperty('id');
+  expect(response.body).toHaveProperty('address');
+  const propertyId = response.body.id;
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
-  });
+  const response = await request(app).get(`/properties/${propertyId}`);
+  expect(response.status).toBe(200);
+  expect(response.body).toHaveProperty(['property', 'items']);
+
+  expect(typeof response.body.property.id).toBe(String);
+  expect(typeof response.body.property.address).toBe(String);
+  expect(typeof response.body.property.image).toBeDefined();
+
+  expect(response.body.items).toHaveProperty([
+    'electric',
+    'hvac',
+    'plumbing',
+    'utilities',
+    'structural',
+    'appliances',
+    'landscaping',
+    'security',
+    'other'
+  ]);
+  expect(typeof response.body.items.electric[0]).toHaveProperty([
+    'coordinates',
+    'name',
+    'installationDate',
+    'serialNumber'
+  ]);
+  expect(typeof response.body.items.electric[0].coordinates).toBe(String);
+  expect(typeof response.body.items.electric[0].name).toBe(String);
+  expect(typeof response.body.items.electric[0].serialNumber).toBe(String);
+  expect(typeof response.body.items.electric[0].installationDate).toBe(Date);
 });

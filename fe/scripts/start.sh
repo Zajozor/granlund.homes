@@ -1,8 +1,8 @@
 set -e
 
-fast_flag=$1
+slow_flag=$1
 
-if [ "$fast_flag" != '--fast' ]; then
+if [ "$slow_flag" == '--slow' ]; then
   echo 'running a slow mode of build'
   eslint .
   npm i

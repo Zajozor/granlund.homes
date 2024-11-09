@@ -15,7 +15,7 @@ export const api = {
   },
   properties: {
     getOne: async ({ id }: { id: string }) => {
-      return await kyInstance.get("properties", { json: { id } }).json();
+      return await kyInstance.get(`properties/${id}`).json();
     },
     createOne: async ({ address, name }: { address: string; name: string }) => {
       return await kyInstance
