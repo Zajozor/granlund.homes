@@ -1,6 +1,6 @@
 set -e
 
-stage='zajo'
+stage='local'
 
 npm i
 

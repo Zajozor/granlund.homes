@@ -2,7 +2,7 @@
 model Catalogue {
     id    String @id @default(uuid())
     serial_number String
-    description String
+    description String // TODO: Make this 'category' and an ENUM of possible types, aircond, electricity etc.
     manufacturer String
     manual_url String
     other_data Json
