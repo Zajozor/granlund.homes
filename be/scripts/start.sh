@@ -7,8 +7,10 @@ echo "starting server on stage: $stage"
 root_dir="$(dirname "$(readlink -f "$0")")/.."
 source ${root_dir}/.env.$stage
 
-if [ "$1" == "clean" ]; then
-  npm run init -w db
+npm run local:up -w db
+
+if [ "$1" = "clean" ] && [ $stage = 'local' ]; then
+  npm run init -w db # Only init in local. This cleans the db.
 fi
 
 npx ts-node-dev --respawn src/index.ts 
