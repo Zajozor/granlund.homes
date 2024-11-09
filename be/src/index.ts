@@ -2,7 +2,7 @@ import { Property } from 'db/models';
 
 import express, { Request, Response } from 'express';
 import cors from 'cors'
-import { UUIDV4 } from 'sequelize';
+import { randomUUID } from 'crypto';
 
 const app = express();
 const PORT = process.env.PORT || 4001;
@@ -19,7 +19,7 @@ app.get('/zajotest', (_, res) => { res.json({ answer: 'yes' })})
 
 app.post('/properties', async (req, res) => {
     const property = await Property.create({
-      uid: UUIDV4(),
+      uid: randomUUID().toString(),
       address: req.body.address,
     });
     console.log('created property ' + property)
