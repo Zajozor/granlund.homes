@@ -1,75 +1,82 @@
 import express, { Request, Response } from 'express';
-import cors from 'cors'
+import cors from 'cors';
 import { randomUUID } from 'crypto';
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (_: Request, res: Response) => {
-  res.send('Hello, Hackathon!');
+  res.send('Hello, Junction! This is our fancy API <3 granlund.homes');
 });
 
-app.get('/zajotest', (_, res) => { res.json({ answer: 'yes' })})
-
-
 app.post('/properties', async (req, res) => {
-    const property = await prisma.property.create({
-        data: {
-            id: randomUUID().toString(),
-            address: req.body.address,
-        }
-    });
-    console.log('created property ' + property)
-
-    res.json(property)
-})
+  const property = await prisma.property.create({
+    data: {
+      id: randomUUID().toString(),
+      address: req.body.address
+    }
+  });
+  res.json(property);
+});
 
 // List all properties
 app.get('/properties', async (_, res) => {
-    const properties = await prisma.property.findMany();
-    res.json(properties)
-})
+  const properties = await prisma.property.findMany();
+  res.json(properties);
+});
+
+app.get('/properties/:id/items', async (req, res) => {
+  const items = await prisma.item.findMany({
+    where: {
+      property_id: req.params.id
+    },
+    include: {
+      catalogue: true,
+      issues: true
+    }
+  });
+  res.json(items);
+});
 
 app.post('/properties/:id/items', async (req, res) => {
-    const property = await prisma.property.findFirst({
-        where: {
-            id: req.params.id
-        }
-    })
-    if (property === null) {
-        res.status(404)
-        res.json({error: 'property not found'})
-        return
+  const property = await prisma.property.findFirst({
+    where: {
+      id: req.params.id
     }
-    const catalogue = await prisma.catalogue.create({
-        data:{
-        id: randomUUID().toString(),
-        serial_number: '47',
-        description: req.body.description || '-',
-        manufacturer: req.body.manufacturer || '-',
-        other_data: {}, 
-        manual_url: 'https://manual'
-        
-        }
-    })
-    const item = await prisma.item.create({
-        data: {
-            id: randomUUID().toString(),
-            catalogue_id: catalogue.id,
-            xy_coordinates: "100x100",
-            condition_notes: '',
+  });
+  if (property === null) {
+    res.status(404);
+    res.json({ error: 'property not found' });
+    return;
+  }
+  const catalogue = await prisma.catalogue.create({
+    data: {
+      id: randomUUID().toString(),
+      serial_number: '47',
+      description: req.body.description || '-',
+      manufacturer: req.body.manufacturer || '-',
 
-            property_id: property.id,
-        }
-    })
-    res.json({catalogue, item})
-})
+      other_data: {},
+      manual_url: 'https://manual'
+    }
+  });
+  const item = await prisma.item.create({
+    data: {
+      id: randomUUID().toString(),
+      catalogue_id: catalogue.id,
+      property_id: property.id,
+      xy_coordinates: { x: 100, y: 100 },
+      condition_notes: ''
+    }
+  });
+  res.json({ catalogue, item });
+});
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {

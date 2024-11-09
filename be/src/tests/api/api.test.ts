@@ -3,7 +3,7 @@
 
 import request from 'supertest';
 import app from '../../index';
-import {describe, expect, it} from '@jest/globals';
+import { describe, expect, it } from '@jest/globals';
 
 describe('Frontend needs these API specs to remain unchanged', () => {
   it('should return Hello, Hackathon!', async () => {

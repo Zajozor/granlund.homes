@@ -1,12 +1,5 @@
-import sequelize from "../../../database/database"; // Import your database instance
-import {
-  Catalogue,
-  Employee,
-  Image,
-  Property,
-  Item,
-  Issue,
-} from "../../../database/models";
+import sequelize from '../../../database/database'; // Import your database instance
+import { Catalogue, Employee, Image, Property, Item, Issue } from '../../../database/models';
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
@@ -16,103 +9,103 @@ afterAll(async () => {
   await sequelize.close();
 });
 
-describe("Sequelize Models Test with In-Memory Database", () => {
-  test.only("should create and fetch Catalogue with Items", async () => {
+describe('Sequelize Models Test with In-Memory Database', () => {
+  test.only('should create and fetch Catalogue with Items', async () => {
     // Create a Catalogue entry
 
     const catalogue = await Catalogue.create({
-      uid: "cat001",
-      serial_number: "SN001",
-      description: "Test Catalogue",
-      manufacturer: "Test Manufacturer",
-      url: "http://example.com/item",
+      uid: 'cat001',
+      serial_number: 'SN001',
+      description: 'Test Catalogue',
+      manufacturer: 'Test Manufacturer',
+      url: 'http://example.com/item'
     });
 
     const property = await Property.create({
-      uid: "prop001",
-      address: "123 Main St",
+      uid: 'prop001',
+      address: '123 Main St'
     });
 
     // Create an Item linked to the Catalogue
     const item = await Item.create({
-      uid: "item001",
-      property_id: "prop001",
-      coordinates: "45.1234, -75.1234",
-      catalogue_uid: catalogue.uid,
+      uid: 'item001',
+      property_id: 'prop001',
+      coordinates: '45.1234, -75.1234',
+      catalogue_uid: catalogue.uid
     });
 
     const fetchedCatalogue = await Catalogue.findOne({
-      where: { uid: "cat001" },
-      include: Item,
+      where: { uid: 'cat001' },
+      include: Item
     });
 
     console.log(fetchedCatalogue);
 
     expect(fetchedCatalogue).toBeDefined();
-    expect(fetchedCatalogue?.serial_number).toBe("SN001");
-    expect(fetchedCatalogue?.Items?.[0]?.uid).toBe("item001");
+    expect(fetchedCatalogue?.serial_number).toBe('SN001');
+    expect(fetchedCatalogue?.Items?.[0]?.uid).toBe('item001');
   });
 
-  test("should create and fetch Property with Items", async () => {
+  test('should create and fetch Property with Items', async () => {
     const property = await Property.create({
-      uid: "prop001",
-      address: "123 Main St",
+      uid: 'prop001',
+      address: '123 Main St'
     });
 
     const item = await Item.create({
-      uid: "item002",
+      uid: 'item002',
       property_id: property.uid,
-      coordinates: "40.7128, -74.0060",
-      catalogue_uid: "cat001", // assuming this exists
+      coordinates: '40.7128, -74.0060',
+      catalogue_uid: 'cat001' // assuming this exists
     });
 
     const fetchedProperty = await Property.findOne({
-      where: { uid: "prop001" },
-      include: Item,
+      where: { uid: 'prop001' },
+      include: Item
     });
 
     expect(fetchedProperty).not.toBeNull();
-    expect(fetchedProperty?.address).toBe("123 Main St");
-    expect(fetchedProperty?.items?.[0]?.uid).toBe("item002");
+    expect(fetchedProperty?.address).toBe('123 Main St');
+    expect(fetchedProperty?.items?.[0]?.uid).toBe('item002');
   });
 
-  test("should create and fetch Employee with Issues", async () => {
+  test('should create and fetch Employee with Issues', async () => {
     const employee = await Employee.create({
-      uid: "emp001",
-      name: "John Doe",
+      uid: 'emp001',
+      name: 'John Doe'
     });
 
     const issue = await Issue.create({
-      uid: "issue001",
-      items_id: "item001",
-      status: "open",
-      description: "Test issue",
-      owner: employee.uid,
+      uid: 'issue001',
+      items_id: 'item001',
+      status: 'open',
+      description: 'Test issue',
+      owner: employee.uid
     });
 
     const fetchedEmployee = await Employee.findOne({
-      where: { uid: "emp001" },
-      include: Issue,
+      where: { uid: 'emp001' },
+      include: Issue
     });
 
     expect(fetchedEmployee).not.toBeNull();
-    expect(fetchedEmployee?.name).toBe("John Doe");
-    expect(fetchedEmployee?.issues?.[0]?.uid).toBe("issue001");
+    expect(fetchedEmployee?.name).toBe('John Doe');
+    expect(fetchedEmployee?.issues?.[0]?.uid).toBe('issue001');
   });
 
-  test("should create and fetch Item with Image", async () => {
+  test('should create and fetch Item with Image', async () => {
     const image = await Image.create({
-      uid: "img001",
-      items_id: "item001",
-      url: "http://example.com/image.png",
+      uid: 'img001',
+      items_id: 'item001',
+      url: 'http://example.com/image.png'
     });
 
     const fetchedItem = await Item.findOne({
-      where: { uid: "item001" },
-      include: Image,
+      where: { uid: 'item001' },
+      include: Image
     });
 
     expect(fetchedItem).not.toBeNull();
-    expect(fetchedItem?.images?.[0]?.uid).toBe("img001");
+    expect(fetchedItem?.images?.[0]?.uid).toBe('img001');
   });
 });
