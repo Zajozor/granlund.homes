@@ -1,3 +1,4 @@
+import 'db/associations'; // Set db runtime associations
 import express, { Request, Response } from 'express';
 import cors from 'cors'
 
