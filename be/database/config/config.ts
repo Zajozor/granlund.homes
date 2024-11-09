@@ -1,4 +1,4 @@
-import { config as dotenvConfig } from 'dotenv-defaults';
+import { config as dotenvConfig } from "dotenv-defaults";
 dotenvConfig();
 
 interface IDatabaseConfig {
@@ -7,7 +7,7 @@ interface IDatabaseConfig {
   database: string;
   host: string;
   port: number;
-  dialect: 'postgres';
+  dialect: "postgres";
   pool: {
     min: number;
     max: number;
@@ -24,14 +24,13 @@ interface IDatabaseConfig {
   };
 }
 
-const dbName = process.env.DB_NAME ?? 'junctioner';
-const username = process.env.POSTGRES_USER ?? 'postgres';
-const password = process.env.POSTGRES_PASSWORD ?? 'postgres';
-const host = process.env.DB_HOST ?? 'localhost';
-const port = Number(process.env.DB_PORT ?? '5432');
+const dbName = process.env.DB_NAME ?? "junctioner";
+const username = process.env.POSTGRES_USER ?? "postgres";
+const password = process.env.POSTGRES_PASSWORD ?? "postgres";
+const host = process.env.DB_HOST ?? "localhost";
+const port = Number(process.env.DB_PORT ?? "5432");
 
 // const sslRequired = process.env.DB_SSL_REQUIRED?.toLowerCase() === 'true' || false;
-const loggingEnabled = process.env.DB_LOGGING_ENABLED?.toLowerCase() === 'true' || false;
 
 const commonConfig = {
   database: dbName,
@@ -39,7 +38,7 @@ const commonConfig = {
   password,
   host,
   port,
-  dialect: 'postgres' as const,
+  dialect: "postgres" as const,
   pool: {
     min: 0,
     max: 5,
@@ -47,7 +46,7 @@ const commonConfig = {
     acquire: 10000,
     evict: 100,
   },
-  logging: loggingEnabled ? console.log : false,
+  logging: false,
 };
 
 //if (sslRequired) {
