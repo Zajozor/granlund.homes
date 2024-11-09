@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import CreateBuilding from "./pages/CreateBuilding";
-import BuildingsList from "./pages/BuildingList";
+import BuildingsList from "./pages/Home";
 
 function App() {
   return (
