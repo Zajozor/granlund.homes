@@ -2,13 +2,9 @@ set -e
 
 stage='local' # can set rasperry pi for Zajo's server ;)
 
-npm i
-
 root_dir="$(dirname "$(readlink -f "$0")")/.."
 source ${root_dir}/.env.$stage
 
-npm run create -w database
-npm run migrate -w database
+npx prisma migrate dev
+npx prisma generate
 
-echo 'Database up. Starting server'
-${root_dir}/scripts/start.sh

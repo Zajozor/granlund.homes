@@ -1,0 +1,32 @@
+
+model Catalogue {
+    id    String @id @default(uuid())
+    serial_number String
+    description String
+    manufacturer String
+    manual_url String
+    other Json
+    created_at DateTime @default(now())
+
+    items Item[]
+}
+
+model Item {
+    id String @id @default(uuid())
+    catalogue Catalogue @relation(fields: [catalogue_id], references: [id])
+    catalogue_id String
+}
+
+model Property {
+    id String @id @default(uuid())
+    address String
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}

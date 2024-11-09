@@ -14,11 +14,12 @@ out "pulling latest"
 git pull
 out "building npm"
 npm install
+
 npm run build
 out "copying over"
-rsync -av -e ssh node_modules/* root@sidekala:/var/www/granlund.backend/node_modules/
-scp -r build/* root@sidekala:/var/www/granlund.backend/
+rsync -av -e ssh ./* root@sidekala:/var/www/granlund.backend/
 out "restarting backend"
+ssh sidekala "sudo -- bash -c 'cd /var/www/granlund.backend && source ../granlund.env && npx prisma migrate deploy &&  npx prisma generate'"
 ssh sidekala "sudo systemctl restart granlund.service"
 
 
