@@ -13,7 +13,6 @@
 		"terminate-connections": "node tools/terminateConnections.js",
 		"migrate": "sequelize db:migrate"
 	},
-	"author": "Jaakko Oinas",
 	"license": "ISC",
 	"dependencies": {
 		"bcryptjs": "^2.4.3",

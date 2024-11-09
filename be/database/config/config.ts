@@ -24,23 +24,20 @@ interface IDatabaseConfig {
   };
 }
 
-console.log('runnning with', process.env.DB_NAME)
 const dbName = process.env.DB_NAME ?? 'junctioner';
 const username = process.env.POSTGRES_USER ?? 'postgres';
 const password = process.env.POSTGRES_PASSWORD ?? 'postgres';
 const host = process.env.DB_HOST ?? 'localhost';
 const port = Number(process.env.DB_PORT ?? '5432');
 
-// Boolean environment variables are treated as string type
-const sslRequired = process.env.DB_SSL_REQUIRED?.toLowerCase() === 'true' || false;
+// const sslRequired = process.env.DB_SSL_REQUIRED?.toLowerCase() === 'true' || false;
 const loggingEnabled = process.env.DB_LOGGING_ENABLED?.toLowerCase() === 'true' || false;
 
-const dbConfig: IDatabaseConfig = {
-  username: username,
-  password: password,
-  database: dbName,
-  host: host,
-  port: port,
+const commonConfig: Omit<IDatabaseConfig, 'database'> = {
+  username,
+  password,
+  host,
+  port,
   dialect: 'postgres',
   pool: {
     min: 0,
@@ -62,4 +59,4 @@ const dbConfig: IDatabaseConfig = {
 //  };
 //}
 
-export default dbConfig;
+export default commonConfig;

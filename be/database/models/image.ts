@@ -38,8 +38,4 @@ Image.init(
   }
 );
 
-// Associations
-Item.hasOne(Image, { foreignKey: 'items_id' });
-Image.belongsTo(Item, { foreignKey: 'items_id' });
-
 export default Image;
