@@ -20,6 +20,11 @@ export const api = {
         .post("properties", { json: { address, name } })
         .json();
     },
+    updateOne: async ({ address, name }: { address: string; name: string }) => {
+      return await kyInstance
+        .patch("properties", { json: { address, name } })
+        .json();
+    },
     list: async () => {
       return await kyInstance.get("properties").json();
     },
