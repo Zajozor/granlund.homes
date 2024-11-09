@@ -1,37 +1,47 @@
-import { useCallback, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { api } from './api'
+import { useCallback, useState } from "react";
 
-type Property = {uid:string; address:string}
+import {
+  Routes,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams,
+} from "react-router-dom";
+
+import { api } from "./api";
+import CreateBuilding from "./pages/CreateBuilding";
+
+type Property = { uid: string; address: string };
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [resp, setResp] = useState('')
-    const fetchResponse = useCallback(async () => {
-        const response = await api.zajoTest()
+  const [count, setCount] = useState(0);
+  const [resp, setResp] = useState("");
+  const fetchResponse = useCallback(async () => {
+    const response = await api.zajoTest();
 
-        setResp(JSON.stringify(response))
-    }, [])
+    setResp(JSON.stringify(response));
+  }, []);
 
-    const [allProperties, setAllProperties] = useState<Property[]>([])
-    const updateProperties = useCallback(async () => {
-        const properties = await api.properties.list()
-        setAllProperties(properties as Property[])
-    }, [])
+  const [allProperties, setAllProperties] = useState<Property[]>([]);
+  const updateProperties = useCallback(async () => {
+    const properties = await api.properties.list();
+    setAllProperties(properties as Property[]);
+  }, []);
 
-    const [addressInput, setAddressInput] = useState('')
+  const [addressInput, setAddressInput] = useState("");
 
-    const addNewProperty = async() => {
-        if (addressInput === '') { alert('missing address'); return; }
-        await api.properties.createOne(addressInput)
-        await updateProperties()
+  const addNewProperty = async () => {
+    if (addressInput === "") {
+      alert("missing address");
+      return;
     }
+    await api.properties.createOne(addressInput);
+    await updateProperties();
+  };
 
   return (
     <>
-      <div>
+      {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -57,16 +67,25 @@ function App() {
       <hr />
       <p>Add new property</p>
 
-      <input onChange={e => setAddressInput(e.target.value)} value={addressInput} />
+      <input
+        onChange={(e) => setAddressInput(e.target.value)}
+        value={addressInput}
+      />
       <button onClick={addNewProperty}>Add</button>
       <p>Existing properties:</p>
       <ol>
-      {
-          allProperties.map(property => <li key={property.uid}>{property.uid} is at {property.address}</li>) 
-      }
-      </ol>
+        {allProperties.map((property) => (
+          <li key={property.uid}>
+            {property.uid} is at {property.address}
+          </li>
+        ))}
+      </ol> */}
+
+      <Routes>
+        <Route path="/buildings/create" element={<CreateBuilding />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
