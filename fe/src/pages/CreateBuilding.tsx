@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Button, TextField, Box } from "@radix-ui/themes";
 import styled from "styled-components";
-import { api } from "../api";
+import { createProperty } from "../api";
 
 const Fields = styled.div`
   display: flex;
@@ -12,7 +12,7 @@ const Fields = styled.div`
 
 function CreateBuildingForm() {
   const [address, setAddress] = useState("");
-  const [buildingName, setBuildingName] = useState("");
+  const [image, setImage] = useState("");
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
     event
@@ -20,9 +20,9 @@ function CreateBuildingForm() {
     event.preventDefault();
 
     try {
-      await api.properties.createOne({
+      await createProperty({
         address,
-        name: buildingName,
+        image,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -41,8 +41,8 @@ function CreateBuildingForm() {
             <Form.Control asChild>
               <TextField.Root
                 type="text"
-                value={buildingName}
-                onChange={(e) => setBuildingName(e.target.value)}
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
                 placeholder="Enter building name"
                 size="2"
                 required
