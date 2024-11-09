@@ -5,7 +5,8 @@ model Catalogue {
     description String
     manufacturer String
     manual_url String
-    other Json
+    other_data Json
+
     created_at DateTime @default(now())
 
     items Item[]
@@ -15,11 +16,47 @@ model Item {
     id String @id @default(uuid())
     catalogue Catalogue @relation(fields: [catalogue_id], references: [id])
     catalogue_id String
+
+    property Property @relation(fields: [property_id], references: [id])
+    property_id String
+
+    xy_coordinates Json
+    condition_notes String
+    installation_date DateTime?
+    image Bytes?
+    created_at DateTime @default(now())
+
+    issues Issue[]
 }
 
 model Property {
     id String @id @default(uuid())
     address String
+    image Bytes?
+    created_at DateTime @default(now())
+
+    items Item[]
+}
+
+model Employee {
+    id String @id @default(uuid())
+    name String
+    created_at DateTime @default(now())
+
+    issues_reported Issue[]
+}
+
+model Issue {
+    id String @id @default(uuid())
+    item Item @relation(fields: [item_id], references: [id])
+    item_id String
+
+    employee Employee @relation(fields: [employee_id], references: [id])
+    employee_id String
+
+    status String
+
+    created_at DateTime @default(now())
 }
 
 datasource db {

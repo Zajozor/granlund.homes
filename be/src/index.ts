@@ -53,7 +53,7 @@ app.post('/properties/:id/items', async (req, res) => {
         serial_number: '47',
         description: req.body.description || '-',
         manufacturer: req.body.manufacturer || '-',
-        other: {},
+        other_data: {}, 
         manual_url: 'https://manual'
         
         }
@@ -62,9 +62,10 @@ app.post('/properties/:id/items', async (req, res) => {
         data: {
             id: randomUUID().toString(),
             catalogue_id: catalogue.id,
+            xy_coordinates: "100x100",
+            condition_notes: '',
 
-            // in pixels on the map i guess, why the heck is this a string field Calvin
-            
+            property_id: property.id,
         }
     })
     res.json({catalogue, item})
