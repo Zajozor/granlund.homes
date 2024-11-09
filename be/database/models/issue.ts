@@ -3,7 +3,6 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from '../database';
 import Item from './item';
 import Employee from './employee';
-import { issueStatus } from '../constants';
 
 class Issue extends Model {
   public uid!: string;

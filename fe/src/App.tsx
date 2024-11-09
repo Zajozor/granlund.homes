@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { api } from './api'
 
+type Property = {uid:string; address:string}
+
 function App() {
   const [count, setCount] = useState(0)
   const [resp, setResp] = useState('')
@@ -12,6 +14,20 @@ function App() {
 
         setResp(JSON.stringify(response))
     }, [])
+
+    const [allProperties, setAllProperties] = useState<Property[]>([])
+    const updateProperties = useCallback(async () => {
+        const properties = await api.properties.list()
+        setAllProperties(properties as Property[])
+    }, [])
+
+    const [addressInput, setAddressInput] = useState('')
+
+    const addNewProperty = async() => {
+        if (addressInput === '') { alert('missing address'); return; }
+        await api.properties.createOne(addressInput)
+        await updateProperties()
+    }
 
   return (
     <>
@@ -37,6 +53,18 @@ function App() {
       </p>
       <button onClick={fetchResponse}>Test BE req</button>
       <p>{resp}</p>
+
+      <hr />
+      <p>Add new property</p>
+
+      <input onChange={e => setAddressInput(e.target.value)} value={addressInput} />
+      <button onClick={addNewProperty}>Add</button>
+      <p>Existing properties:</p>
+      <ol>
+      {
+          allProperties.map(property => <li key={property.uid}>{property.uid} is at {property.address}</li>) 
+      }
+      </ol>
     </>
   )
 }

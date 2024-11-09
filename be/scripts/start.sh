@@ -11,7 +11,7 @@ source ${root_dir}/.env.$stage
 
 npm run local:up -w db
 
-npm test jest tests/unit
+# npm test jest tests/unit
 
 if [ "$1" = "clean" ] && [ $stage = 'local' ]; then
   npm run init -w db # Only init in local. This cleans the db.

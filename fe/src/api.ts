@@ -12,5 +12,14 @@ export const api = {
     zajoTest: async (/** api request params would go here **/) => {
         return await kyInstance.get('zajotest').json()
         
+    },
+
+    properties: {
+        createOne: async (address: string) => {
+            return await kyInstance.post('properties', {json: {address}}).json()
+        },
+        list: async() => {
+            return await kyInstance.get('properties').json()
+        }
     }
 }

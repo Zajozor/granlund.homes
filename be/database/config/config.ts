@@ -24,6 +24,7 @@ interface IDatabaseConfig {
   };
 }
 
+console.log('runnning with', process.env.DB_NAME)
 const dbName = process.env.DB_NAME ?? 'junctioner';
 const username = process.env.POSTGRES_USER ?? 'postgres';
 const password = process.env.POSTGRES_PASSWORD ?? 'postgres';
@@ -51,14 +52,14 @@ const dbConfig: IDatabaseConfig = {
   logging: loggingEnabled ? console.log : false,
 };
 
-if (sslRequired) {
-  const rejectUnauthorized = process.env.DB_REJECT_UNAUTHORIZED?.toLowerCase() === 'true' || false;
-  dbConfig.dialectOptions = {
-    ssl: {
-      require: sslRequired,
-      rejectUnauthorized: rejectUnauthorized,
-    },
-  };
-}
+//if (sslRequired) {
+//  const rejectUnauthorized = process.env.DB_REJECT_UNAUTHORIZED?.toLowerCase() === 'true' || false;
+//  dbConfig.dialectOptions = {
+//    ssl: {
+//      require: sslRequired,
+//      rejectUnauthorized: rejectUnauthorized,
+//    },
+//  };
+//}
 
 export default dbConfig;
