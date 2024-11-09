@@ -1,7 +1,7 @@
 {
 	"name": "db",
 	"version": "1.0.0",
-	"description": "DaySave database",
+	"description": "Junction database",
 	"scripts": {
 		"local:up": "docker-compose --env-file ../.env.local up -d && sleep 1",
 		"local:down": "docker-compose --env-file ../.env.local down",

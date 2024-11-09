@@ -1,4 +1,4 @@
-# DaySave Database for Local Development
+# Database for Local Development
 
 Adminer URL: http://localhost:8080
 
