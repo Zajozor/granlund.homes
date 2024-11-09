@@ -32,7 +32,7 @@ model Item {
 model Property {
     id String @id @default(uuid())
     address String
-    image Bytes?
+    image Bytes[]
     created_at DateTime @default(now())
 
     items Item[]
