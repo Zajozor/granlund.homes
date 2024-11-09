@@ -1,41 +1,28 @@
 set -e
 
-branch=$(git rev-parse --abbrev-ref HEAD)
-message=$1
-
-if [ -z "$message" ]; then
-  echo "Please provide a commit message"
-  exit 1
-fi
-
-HEAD=$2
-
-if [ -z "$HEAD" ]; then
-  echo "Please provide number of HEAD commits to squash"
-  exit 1
-fi
-
-echo "Squashing $HEAD commits"
-git rebase HEAD~$HEAD
-
-echo 'making a commit'
-git add .
-git commit -m $message
-
-echo "Cheking out main"
+echo 'Switch to the main branch'
 git checkout main
 
-echo "Pulling from main"
+echo 'Update the local main branch'
 git pull
 
-echo "Rebasing $branch onto main"
-git checkout $branch
+echo 'Switch to the feature branch'
+git checkout feature/desktop-client
 
-echo "Rebasing $branch to main"
+echo 'Rebase the feature branch onto the main branch'
 git rebase main
 
-echo "Pushing $branch to main"
-git checkout main && git merge $branch --squash && git commit -m $message && git push
+echo 'Push the rebased feature branch to the remote repository'
+git push --force-with-lease
 
-git checkout $branch
-echo "Pushed to main. Op finished."
+echo 'Switch back to the main branch'
+git checkout main
+
+echo 'Merge the feature branch into main as a single commit'
+git merge --squash feature/desktop-client
+
+echo 'Push the updated main branch to the remote repository'
+git push
+
+echo 'Switch back to the feature branch'
+git checkout feature/desktop-client

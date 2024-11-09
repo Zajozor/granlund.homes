@@ -1,7 +1,62 @@
+.CollapsibleRoot {
+  background-color: #333;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #444;
+  transition: background-color 0.3s ease;
+  width: '20%';
+  align-items: 'flex-start';
+}
+
+.CollapsibleRoot:hover {
+  background-color: #444;
+}
+
+.IconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.IconButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.Text {
+  font-size: 16px;
+  color: #e0e0e0;
+  font-family: 'Arial', sans-serif;
+  margin: 8px 0;
+}
+
+.Repository {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #444;
+  margin-top: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.Repository:hover {
+  background-color: #555;
+}
+
+/* Collapsible content styles */
+.CollapsibleContent {
+  margin-top: 8px;
+  border-top: 1px solid #555;
+  padding-top: 8px;
+}
+
 #root {
-  max-width: 1280px;
+  max-width: '100%';
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 

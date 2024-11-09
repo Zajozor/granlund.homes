@@ -25,6 +25,7 @@ export type Items = {
 };
 
 export type Item = {
+  uid: string;
   coordinates: string;
   name: string;
   installationDate: Date;
