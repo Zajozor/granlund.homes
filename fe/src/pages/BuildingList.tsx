@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Box, Text } from "@radix-ui/themes";
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // For navigation to edit/view pages
-import { Loader } from "../components/Loader";
+// import { Loader } from "../components/Loader";
 
 type Building = {
   id: string;
@@ -50,8 +50,8 @@ const mockBuildings = [
 
 const BuildingsList = () => {
   const [buildings, setBuildings] = useState<Building[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchBuildings = async () => {
@@ -84,7 +84,7 @@ const BuildingsList = () => {
         buildings.map((building) => (
           <BuildingItem key={building.id}>
             <Box>
-              <Text as="h2" size="3">
+              <Text as="label" size="3">
                 {building.name}
               </Text>
               <Text as="p" size="2">
