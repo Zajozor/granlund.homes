@@ -50,6 +50,7 @@ const mockBuildings = [
 
 const BuildingsList = () => {
   const [buildings, setBuildings] = useState<Building[]>([]);
+
   // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState("");
 
@@ -72,8 +73,8 @@ const BuildingsList = () => {
     fetchBuildings();
   }, []);
 
-//   if (loading) return <Loader />;
-//   if (error) return <p>Error loading buildings: {error}</p>;
+  //   if (loading) return <Loader />;
+  //   if (error) return <p>Error loading buildings: {error}</p>;
 
   return (
     <BuildingsContainer>

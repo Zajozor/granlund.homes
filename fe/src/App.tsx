@@ -1,14 +1,9 @@
-import {
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import CreateBuilding from "./pages/CreateBuilding";
 import EditBuilding from "./pages/EditBuilding";
 import BuildingsList from "./pages/BuildingList";
 
 function App() {
-
   return (
     <>
       <Routes>
