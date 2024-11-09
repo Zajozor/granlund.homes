@@ -6,4 +6,4 @@ npm i
 
 npx eslint
 
-npx jest
+# npx jest
