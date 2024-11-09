@@ -13,8 +13,10 @@ export const api = {
   zajoTest: async (/** api request params would go here **/) => {
     return await kyInstance.get("zajotest").json();
   },
-
   properties: {
+    getOne: async ({ id }: { id: string }) => {
+      return await kyInstance.get("properties", { json: { id } }).json();
+    },
     createOne: async ({ address, name }: { address: string; name: string }) => {
       return await kyInstance
         .post("properties", { json: { address, name } })

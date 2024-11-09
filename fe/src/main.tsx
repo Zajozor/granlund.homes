@@ -9,7 +9,7 @@ import "@radix-ui/themes/styles.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <Theme>
+      <Theme appearance="dark">
         <App />
       </Theme>
     </BrowserRouter>

@@ -11,6 +11,7 @@ import {
 import { api } from "./api";
 import CreateBuilding from "./pages/CreateBuilding";
 import EditBuilding from "./pages/EditBuilding";
+import BuildingsList from "./pages/BuildingList";
 
 type Property = { uid: string; address: string };
 
@@ -83,6 +84,7 @@ function App() {
       </ol> */}
 
       <Routes>
+        <Route path="/buildings" element={<BuildingsList />} />
         <Route path="/buildings/create" element={<CreateBuilding />} />
         <Route path="/buildings/edit/:id" element={<EditBuilding />} />
       </Routes>

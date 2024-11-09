@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import * as Form from "@radix-ui/react-form";
 import { Button, TextField, Box } from "@radix-ui/themes";
 import styled from "styled-components";
-import { api } from "../api"; // Assuming you have an API module
-import { useParams } from "react-router-dom"; // To get building ID from the URL if applicable
+import { api } from "../api";
+import { useParams } from "react-router-dom";
 
 const Fields = styled.div`
   display: flex;
