@@ -33,12 +33,13 @@ const port = Number(process.env.DB_PORT ?? '5432');
 // const sslRequired = process.env.DB_SSL_REQUIRED?.toLowerCase() === 'true' || false;
 const loggingEnabled = process.env.DB_LOGGING_ENABLED?.toLowerCase() === 'true' || false;
 
-const commonConfig: Omit<IDatabaseConfig, 'database'> = {
+const commonConfig = {
+  database: dbName,
   username,
   password,
   host,
   port,
-  dialect: 'postgres',
+  dialect: 'postgres' as const,
   pool: {
     min: 0,
     max: 5,

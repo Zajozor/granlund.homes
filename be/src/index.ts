@@ -1,5 +1,4 @@
-import 'db/associations'; // Set db runtime associations
-import Property from 'db/models/property';
+import { Property } from 'db/models';
 
 import express, { Request, Response } from 'express';
 import cors from 'cors'

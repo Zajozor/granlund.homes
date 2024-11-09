@@ -1,11 +1,6 @@
-// import 'db/associations'; // Set db runtime associations
 import sequelize from 'db/database'; // Import your database instance
-import {Catalogue} from 'db/models';
-import Item from 'db/models/item';
-import Property from 'db/models/property';
-import Issue from 'db/models/issue';
-import Image from 'db/models/image';
-import Employee from 'db/models/employee';
+console.log('sequelize', sequelize);
+import { Catalogue, Employee, Image, Property, Item,  Issue } from 'db/models';
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
