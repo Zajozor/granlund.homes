@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:?}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?}
+    ports:
+      - '5432:5432'
+    volumes:
+      # This creates Docker maintained volume in the host system and maps it to container's default postgresql data path
+      # It is used for data persistence and initialization purposes, ensuring that your data survives container restarts and can be initialized with custom scripts
+      - db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/create_databases.sql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  db:
+    driver: local

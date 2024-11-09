@@ -3,15 +3,24 @@
   "version": "1.0.0",
   "description": "A FlyHighDiveDeep submission for Junction 2024.",
   "main": "index.js",
+  "workspaces": [
+    "database"
+  ],
   "scripts": {
-    "start": "start.sh",
+    "start": "./scripts/start.sh",
+    "init": "./scripts/init.sh",
     "test": "./scripts/test.sh"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.5",
+    "sequelize-typescript": "^2.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -22,6 +31,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "@types/supertest": "^6.0.2",
+    "@types/validator": "^13.12.2",
     "babel-jest": "^29.7.0",
     "eslint": "^8.57.1",
     "eslint-config-standard": "^17.1.0",
