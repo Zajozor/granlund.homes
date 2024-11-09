@@ -1,0 +1,4 @@
+- init db with ./scripts/init.sh
+- for editing models edit prisma schema. run init to take effect
+- run be with ./scripts/start.sh
+- index.ts of the backend has example prisma usages
