@@ -19,9 +19,9 @@ export async function getHello(): Promise<string> {
   }
 }
 
-export async function getProperties(): Promise<Property[]> {
+export async function getProperties(): Promise<Property> {
   try {
-    const response = await axios.get<Property[]>(`${API_BASE_URL}/properties`);
+    const response = await axios.get<Property>(`${API_BASE_URL}/properties`);
     return response.data;
   } catch (error) {
     console.error('Error fetching properties:', error);
