@@ -2,6 +2,8 @@ set -e
 
 stage='local' # can set rasperry pi for Zajo's server ;)
 
+npm i
+
 root_dir="$(dirname "$(readlink -f "$0")")/.."
 source ${root_dir}/.env.$stage
 

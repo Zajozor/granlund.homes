@@ -2,6 +2,8 @@
 # Usage: bash test.sh
 set -e
 
+npm i
+
 npx eslint
 
 npx jest
