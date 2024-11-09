@@ -12,10 +12,11 @@ reset_dir
 
 out "pulling latest"
 git pull
+npm i
 out "building npm"
 npm run build
 out "copying over"
-scp -r build/* root@sidekala:/var/www/granlund.homes/
+scp -r dist/* root@sidekala:/var/www/granlund.homes/
 
 
 
