@@ -1,10 +1,10 @@
 // models/associations.ts
-import Catalogue from './catalogue';
-import Item from './item';
-import Property from './property';
-import Issue from './issue';
-import Image from './image';
-import Employee from './employee';
+import Catalogue from './models/catalogue';
+import Item from './models/item';
+import Property from './models/property';
+import Issue from './models/issue';
+import Image from './models/image';
+import Employee from './models/employee';
 
 // Define associations here
 Catalogue.hasMany(Item, { foreignKey: 'catalogue_uid' });

@@ -1,6 +1,6 @@
-// import 'db/associations'; // Set db runtime associations
+import 'db/associations'; // Set db runtime associations
 import sequelize from 'db/database'; // Import your database instance
-import {Catalogue} from 'db/models';
+import Catalogue from 'db/models/catalogue';
 import Item from 'db/models/item';
 import Property from 'db/models/property';
 import Issue from 'db/models/issue';
