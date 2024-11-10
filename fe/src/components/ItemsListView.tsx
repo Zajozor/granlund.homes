@@ -44,5 +44,5 @@ export default ({ items }: { items: Items }) => {
 			</Collapsible.Content>
 		</Collapsible.Root>
 	);
-	return <div style={{ overflow: 'hidden', height: '100vh', paddingTop: '3vh' }}>{Object.keys(items).map((category) => CategorySection(category as keyof Items))}</div>;
+	return <div style={{ zIndex: 1000, overflow: 'hidden', height: '100vh', paddingTop: '3vh' }}>{Object.keys(items).map((category) => CategorySection(category as keyof Items))}</div>;
 };
