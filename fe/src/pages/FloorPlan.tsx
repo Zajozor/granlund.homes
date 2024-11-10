@@ -9,7 +9,7 @@ import CreateItemDialog from '../components/CreateItemDialog';
 
 
 function MarkCreator({createMark, floor}: {createMark: (lat:number, lng:number, floor:number) => void, floor:number}) {
-  const map = useMapEvents({
+  useMapEvents({
     dblclick(e) {
         createMark(e.latlng.lat, e.latlng.lng, floor)
     },
@@ -90,7 +90,7 @@ return <><Tabs.Root defaultValue="0">
                    <br />
 
                    Condition: {item.condition_notes || '-'}<br />
-                   <img src={item.image} width="100%" />
+                   <img src={item.image} width="50%" />
                    <br />
 
                     Added on: {new Date(item.created_at).toDateString()}
@@ -99,7 +99,7 @@ return <><Tabs.Root defaultValue="0">
                                                                        {key.split('_').map((word) => { 
     return word[0].toUpperCase() + word.substring(1); 
 }).join(' ')}: { Array.isArray(value) ? value.join(' ') : (typeof value !== 'object' ? 
-    JSON.stringify(value) : '-' )
+    JSON.stringify(value).substring(0, 80).replace(/\w$/, '...') : '-' )
 }
                                                                        </li>)}
                         </ul>
