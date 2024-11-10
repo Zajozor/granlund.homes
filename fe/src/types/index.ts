@@ -34,7 +34,7 @@ export type Item = {
 
 export type NewProperty = {
   address: string;
-  image: string; // Assuming image is a base64-encoded string or a URL
+  image: File | null; // Assuming image is a base64-encoded string or a URL
 };
 
 export type CreatePropertyResponse = {

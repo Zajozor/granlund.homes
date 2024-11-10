@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"; // For navigation to edit/view pages
 import { Loader } from "../components/Loader";
 import { getProperties } from "../api";
 import { Property } from "../types";
+import CreatePropertyDialog from "../components/CreatePropertyDialog";
 
 const Header = () => (
   <div>
@@ -54,7 +55,7 @@ const BuildingsList = () => {
     updateShownBuildings()
   }, []);
 
-  if (loading) return <Loader />;
+  // if (loading) return <Loader />;
 
   const PropertyList = () => {
 
@@ -77,9 +78,8 @@ const BuildingsList = () => {
         </TextField.Slot>
       </TextField.Root>
 
-      <Button>
-        Add a property
-      </Button>
+
+      <CreatePropertyDialog />
     </div>
   );
 
