@@ -8,7 +8,9 @@ import CreatePropertyDialog from '../components/CreatePropertyDialog';
 
 const Header = () => (
   <div>
-    <span className="Text">Granlund management</span>
+    <Text as="label" size="4" weight="bold" style={{ color: 'rbg(105,115,00)' }}>
+      Browse Properties Under Management
+    </Text>
   </div>
 );
 
@@ -41,20 +43,15 @@ const PropertyCard = ({ property }: { property: Property }) => {
 
 const BuildingsList = () => {
   const [buildings, setBuildings] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const updateShownBuildings = async () => {
-    setLoading(true);
     const buildings = await getProperties();
     setBuildings(buildings);
-    setLoading(false);
   };
 
   useEffect(() => {
     updateShownBuildings()
   }, []);
-
-  // if (loading) return <Loader />;
 
   const PropertyList = () => {
 
@@ -71,21 +68,20 @@ const BuildingsList = () => {
 
   const SearchBar = () => (
     <div style={{ display: 'flex', flexDirection: 'row', width: '60%', gap: 28 }}>
-      <TextField.Root placeholder="Search the docs…" style={{flex: 3}}>
+      <TextField.Root placeholder="Type address…" style={{flex: 3}}>
         <TextField.Slot>
           <MagnifyingGlassIcon height="16" width="16" />
         </TextField.Slot>
       </TextField.Root>
-
-
       <CreatePropertyDialog />
     </div>
   );
 
   return (
     <div className="page">
-      <Header />
       <Box height="200px" />
+      <Header />
+      <Box height="100px" />
       <SearchBar />
       <Box height="200px" />
       <PropertyList />

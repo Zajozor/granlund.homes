@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dialog, Button, Text, TextField, Flex } from '@radix-ui/themes';
-import { createProperty } from '../api/index';
+import { createProperty } from '../api';
 
   const createBase64Image = (file :File) => {
     const reader = new FileReader();
@@ -48,6 +48,15 @@ const CreatePropertyDialog = () => {
     }
   }
 
+  const ImageInputButton = () => (
+    <>
+      <input type="file" multiple onChange={(e) => handleFileChange(e)} />
+      {images.length >0 && <>
+          <p>{images.length} floor plans selected.</p>
+          <Button  onClick={() => setImages([])}>Remove selected files</Button>
+      </>}
+    </>
+  );
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -76,13 +85,7 @@ const CreatePropertyDialog = () => {
             <Text as="div" size="2" mb="1" weight="bold">
               Floor plan
             </Text>
-            <>
-              <input type="file" multiple onChange={(e) => handleFileChange(e)} />
-              {images.length >0 && <>
-                  <p>{images.length} floor plans selected.</p>
-                  <Button  onClick={() => setImages([])}>Remove selected files</Button>
-              </>}
-            </>
+            <ImageInputButton />
           </label>
         </Flex>
 

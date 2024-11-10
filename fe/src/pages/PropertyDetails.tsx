@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { Container, Button, Box, Text } from "@radix-ui/themes";
 import styled from "styled-components";
 import { Link } from "react-router-dom"; // For navigation to edit/view pages
-// import { Loader } from "../components/Loader";
 import { getProperty } from "../api";
-import { Item, Items, Property } from "../types";
+import { Items, Property } from "../types";
 
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { RowSpacingIcon, Cross2Icon } from "@radix-ui/react-icons";
@@ -94,22 +93,17 @@ const ItemsCategoryList = ({ items }: { items: Items }) => {
 const BuildingsList = () => {
   const [property, setProperty] = useState<Property>({});
   const [items, setItems] = useState<Items>({});
-  const [loading, setLoading] = useState(true);
 
   const updateShownBuildings = async () => {
-    setLoading(true);
     const id = 1; // TODO: How to do t.
     const result = await getProperty(id);
     setProperty(result.property);
     setItems(result.items);
-    setLoading(false);
   };
 
   useEffect(() => {
     updateShownBuildings()
   }, []);
-
-  // if (loading) return <Loader />;
 
   return (
     <BuildingsContainer>
