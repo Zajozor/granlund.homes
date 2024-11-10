@@ -77,6 +77,18 @@ body {
   margin: 0;
 }
 
+/* styles.css */
+.CollapsibleContent {
+  overflow: hidden;
+  align-items: flex-start;
+}
+.CollapsibleContent[data-state="open"] {
+  animation: slideDown 600ms ease-in;
+}
+.CollapsibleContent[data-state="closed"] {
+  animation: slideUp 400ms ease-out;
+}
+
 @media (max-width: 768px) {
   .searchBarContainer {
     height: 100px;

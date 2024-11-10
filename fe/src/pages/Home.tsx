@@ -7,6 +7,7 @@ import { compareTwoStrings } from 'string-similarity';
 
 import CreatePropertyDialog from '../components/CreatePropertyDialog';
 import PropertyListItem from '../components/PropertyListItem';
+import Loader from '../components/Loader';
 
 const Header = () => (
   <div>
@@ -54,25 +55,6 @@ const BuildingsList = () => {
   useEffect(() => {
     updateShownBuildings()
   }, []);
-
-  const Loader = () => {
-    const [dots, setDots] = useState<string>('.');
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-      setDots((prev) => (prev.length < 3 ? prev + '.' : '.'));
-      }, 300);
-      return () => clearInterval(interval);
-    }, []);
-
-    return (
-      <div>
-      <Text as="p" size="2" color='blue'>
-        [{dots}]
-      </Text>
-      </div>
-    );
-  };
 
   const SearchBar = (
     <div className='searchBarContainer'>

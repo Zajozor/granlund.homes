@@ -1,43 +1,34 @@
 import '../App.css';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; 
-import { Container, Button, Box, Text } from "@radix-ui/themes";
+import { Container, Button, Text } from "@radix-ui/themes";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { getProperty } from "../api";
 import { Items, Property } from "../types";
 
 import ItemsListView from "../components/ItemsListView";
+import Loader from "../components/Loader";
 
-const BuildingItem = styled.div`
+const HeaderThemedView = styled.div`
   display: flex;
-  justify-content: space-between;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  justify-content: flex-end;
   margin-bottom: 1rem;
+  gap: 5rem;
+  padding-right: 2rem;
+  align-items: center;
   `;
 
 const PropertyBanner = ({ property }: { property: Property }) => {  
+  const openProperty = () => window.location.href = `/property/${property.id}`;
+  const name = property.address || 'Enjoy your Junction whilst we load…';
+
   return (
-    <BuildingItem key={property.id}>
-      <Box>
-        <Text as="p" size="2">
-          Address: {property.address}
-        </Text>
-      </Box>
-      <Box>
-        <Link to={`/property/${property.id}`}>
-          <Button size="2" variant="soft">
-            View
-          </Button>
-        </Link>
-        <Link to={`/property/${property.id}/edit`}>
-          <Button size="2" variant="solid" ml="1">
-            Edit
-          </Button>
-        </Link>
-      </Box>
-    </BuildingItem>
+    <HeaderThemedView key={property.id}>
+      <Text as="p" size="2">{name}</Text>
+      <Button size="3" variant="soft" onClick={() => openProperty()}>
+        Open Inspector
+      </Button>
+    </HeaderThemedView>
   );
 };
 
@@ -45,12 +36,15 @@ const PropertyView = () => {
   const { propertyId } = useParams<{ propertyId: string }>();
   const [propertyDetails, setPropertyDetails] = useState<Property>({});
   const [items, setItems] = useState<Items>({});
+  const [loading, setLoading] = useState(false);
 
   const updateShownBuildings = async () => {
     if (propertyId) {
+      setLoading(true);
       const { property, items } = await getProperty(propertyId);
       setPropertyDetails(property);
       setItems(items);
+      setLoading(false);
     }
   };
 
@@ -62,8 +56,12 @@ const PropertyView = () => {
 		<>
 			<PropertyBanner property={propertyDetails} />
 			<Container style={{ flex: 1, display: 'flex', flexDirection: 'row' }} align='left'>
-				<ItemsListView items={items} />
-				<div style={{ height: '100vh', width: '50vw' }} />
+      {loading
+      ? <Loader />
+      : (<>
+        <ItemsListView items={items} />
+        <div style={{ height: '100vh', width: '50vw' }} />
+      </>)}
 			</Container>
 		</>
   );
