@@ -18,7 +18,7 @@ const Header = () => (
 
 const PropertyList = ({ properties, search }: { properties: Property[], search: string }) => {
   const filteredBuildings = properties
-  .filter((property) => compareTwoStrings(property.address.toLowerCase(), search.toLowerCase()) > 0.3)
+  .filter((property) => compareTwoStrings(property.address.toLowerCase(), search.toLowerCase()) > 0.1)
   .sort((a, b) => a.address.localeCompare(b.address));
 
   const isPropertiesAdded = properties.length > 0;

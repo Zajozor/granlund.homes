@@ -31,7 +31,7 @@ export async function getProperties(): Promise<Property[]> {
 
 export async function getProperty(id: string | number): Promise<PropertyDetails> {
   try {
-    const response = await axios.get<PropertyDetails>(`${API_BASE_URL}/properties:${id}`);
+    const response = await axios.get<PropertyDetails>(`${API_BASE_URL}/properties/${id}`);
     // Convert installationDate strings to Date objects
     for (const category in response.data.items) {
       // eslint-disable-next-line no-prototype-builtins

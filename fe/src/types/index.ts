@@ -5,11 +5,7 @@ export type Property = {
 };
 
 export type PropertyDetails = {
-  property: {
-    id: string;
-    address: string;
-    image?: string;
-  };
+  property: Property;
   items: Items;
 };
 
