@@ -1,56 +1,46 @@
 import { useEffect, useState } from "react";
-import { Button, Box, Text } from "@radix-ui/themes";
-import styled from "styled-components";
+import { Button, Box, Text, TextField } from "@radix-ui/themes";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom"; // For navigation to edit/view pages
 import { Loader } from "../components/Loader";
 import { getProperties } from "../api";
+import { Property } from "../types";
 
-type Building = {
-  id: string;
-  address: string;
-};
+const Header = () => (
+  <div>
+    <span className="Text">Granlund management</span>
+  </div>
+);
 
-const BuildingItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-`;
+const PropertyCard = ({ property }: { property: Property }) => {
+  const { address, id } = property;
+  const isPropertiesAdded = address !== undefined;
+  const text = isPropertiesAdded ? address : "No properties added";
 
-const BuildingsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const PropertyCard = ({ property }: { property: Building }) => {
-  return (
-    <BuildingItem key={property.id}>
+  const ActionsButtons = () => (
     <Box>
-      <Text as="p" size="2">
-        Address: {property.address}
-      </Text>
-    </Box>
-    <Box>
-      <Link to={`/buildings/${property.id}`}>
+      <Link to={`/properties/${id}`}>
         <Button size="2" variant="soft">
-          View
-        </Button>
-      </Link>
-      <Link to={`/buildings/${property.id}/edit`}>
-        <Button size="2" variant="solid" ml="1">
-          Edit
+          Open
         </Button>
       </Link>
     </Box>
-  </BuildingItem>
+  );
+
+  return (
+    <div className='listItem' key={property.id}>
+      <Box>
+        <Text as="p" size="2">
+         {text}
+        </Text>
+      </Box>
+      {isPropertiesAdded ? <ActionsButtons /> : null}
+    </div>
   );
 };
 
 const BuildingsList = () => {
-  const [buildings, setBuildings] = useState<Building[]>([]);
+  const [buildings, setBuildings] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
 
   const updateShownBuildings = async () => {
@@ -64,13 +54,14 @@ const BuildingsList = () => {
     updateShownBuildings()
   }, []);
 
-    if (loading) return <Loader />;
-
-  if (buildings.length === 0) {
-    return <Text>No buildings found.</Text>
-  }
+  if (loading) return <Loader />;
 
   const PropertyList = () => {
+
+    if (buildings.length === 0) {
+      return <PropertyCard property={{}} />
+    }
+
     return(
       buildings.map((property) => (
         <PropertyCard key={property.id} property={property} />
@@ -78,11 +69,28 @@ const BuildingsList = () => {
     )
   };
 
+  const SearchBar = () => (
+    <div style={{ display: 'flex', flexDirection: 'row', width: '60%', gap: 28 }}>
+      <TextField.Root placeholder="Search the docs…" style={{flex: 3}}>
+        <TextField.Slot>
+          <MagnifyingGlassIcon height="16" width="16" />
+        </TextField.Slot>
+      </TextField.Root>
+
+      <Button>
+        Add a property
+      </Button>
+    </div>
+  );
+
   return (
-    <BuildingsContainer>
-      <h1>Buildings</h1>
+    <div className="page">
+      <Header />
+      <Box height="200px" />
+      <SearchBar />
+      <Box height="200px" />
       <PropertyList />
-    </BuildingsContainer>
+    </div>
   );
 };
 

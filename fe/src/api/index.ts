@@ -2,7 +2,7 @@
 import { Property, PropertyDetails, Items, Item, NewProperty, CreatePropertyResponse } from '../types';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:4001';
 
 // Set default axios configuration
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
