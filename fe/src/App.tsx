@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/properties" element={<BuildingsList />} />
         <Route path="/property" element={<CreateBuilding />} />
-        <Route path="/floor-plan" element={<FloorPlan />} />
+        <Route path="/property/:id" element={<FloorPlan />} />
         <Route path="*" element={<Navigate to="/properties" />} />
       </Routes>
     </>
