@@ -18,7 +18,7 @@ const ResponsiveNavbar = () => (
           alt="qr code" 
           width={300} 
           height={300} 
-          style={{ marginTop: 20, marginRight: 20}}
+          style={{ marginTop: 20, marginRight: 20, zIndex: 10000 }}
         />
       </Popover.Content>
     </Popover.Root>
