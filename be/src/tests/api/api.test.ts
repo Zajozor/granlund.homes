@@ -13,54 +13,53 @@ describe('Frontend needs these API specs to remain unchanged', () => {
     expect(response.text).toBe('Hello, Hackathon!');
   });
   it('should get a list of properties', async () => {
-    const response = await request(app).get('/properties');
-    expect(response.status).toBe(200);
-    expect(typeof response.body).toBe(Array);
-    response.body.forEach((property: any) => {
+    const response3 = await request(app).get('/properties');
+    expect(response3.status).toBe(200);
+    expect(typeof response3.body).toBe(Array);
+    response3.body.forEach((property: any) => {
       expect(property).toHaveProperty('id');
       expect(property).toHaveProperty('address');
     });
   });
-});
-it('Create and view a property', async () => {
-  const newProperty = {
-    address: '1234 Elm St',
-    image: newPropertyImage
-  };
-  const response = await request(app).post('/properties').send(newProperty);
+  it('One property', async () => {
+    const response2 = await request(app).get('/properties:1');
+    expect(response2.status).toBe(200);
+    expect(response2.body).toHaveProperty(['property', 'items']);
 
-  expect(response.status).toBe(200);
-  expect(response.body).toHaveProperty('id');
-  expect(response.body).toHaveProperty('address');
-  const propertyId = response.body.id;
+    expect(typeof response2.body.property.id).toBe(String);
+    expect(typeof response2.body.property.address).toBe(String);
+    expect(typeof response2.body.property.image).toBeDefined();
 
-  const response = await request(app).get(`/properties/${propertyId}`);
-  expect(response.status).toBe(200);
-  expect(response.body).toHaveProperty(['property', 'items']);
+    expect(response2.body.items).toHaveProperty([
+      'electric',
+      'hvac',
+      'plumbing',
+      'utilities',
+      'structural',
+      'appliances',
+      'landscaping',
+      'security',
+      'other'
+    ]);
+    expect(typeof response2.body.items.electric[0]).toHaveProperty([
+      'coordinates',
+      'name',
+      'installationDate',
+      'serialNumber'
+    ]);
+    expect(typeof response2.body.items.electric[0].coordinates).toBe(String);
+    expect(typeof response2.body.items.electric[0].name).toBe(String);
+    expect(typeof response2.body.items.electric[0].serialNumber).toBe(String);
+    expect(typeof response2.body.items.electric[0].installationDate).toBe(Date);
+  });
+  it('Create a property', async () => {
+    const newProperty = {
+      address: '1234 Elm St',
+      image: newPropertyImage
+    };
+    const response = await request(app).post('/properties/create').send(newProperty);
 
-  expect(typeof response.body.property.id).toBe(String);
-  expect(typeof response.body.property.address).toBe(String);
-  expect(typeof response.body.property.image).toBeDefined();
-
-  expect(response.body.items).toHaveProperty([
-    'electric',
-    'hvac',
-    'plumbing',
-    'utilities',
-    'structural',
-    'appliances',
-    'landscaping',
-    'security',
-    'other'
-  ]);
-  expect(typeof response.body.items.electric[0]).toHaveProperty([
-    'coordinates',
-    'name',
-    'installationDate',
-    'serialNumber'
-  ]);
-  expect(typeof response.body.items.electric[0].coordinates).toBe(String);
-  expect(typeof response.body.items.electric[0].name).toBe(String);
-  expect(typeof response.body.items.electric[0].serialNumber).toBe(String);
-  expect(typeof response.body.items.electric[0].installationDate).toBe(Date);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
 });
