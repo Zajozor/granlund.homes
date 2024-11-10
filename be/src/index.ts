@@ -148,8 +148,8 @@ app.post('/properties/:id/items', async (req, res) => {
     data: {
       id: randomUUID().toString(),
       serial_number: req.body.serial_number || imageInfo?.serial_number || '',
-      name: req.body.name || imageInfo?.name || '-',
-      category: imageInfo?.category || '',
+      name: req.body.name || imageInfo?.name || 'Inventory Item',
+      category: req.body.category || imageInfo?.category || '',
       manufacturer: req.body.manufacturer || imageInfo?.manufacturer || '-',
 
       other_data: imageInfo?.other_data || {},

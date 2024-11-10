@@ -71,10 +71,10 @@ export async function createProperty(newProperty: NewProperty): Promise<CreatePr
 }
 
 
-export async function createItem(propertyId: string, name:string, image:string, serialNumber:string, xy_coordinates: {x:number, y:number, floor:number}, notes: string | null): Promise<void> {
+export async function createItem(propertyId: string, category:string, image:string, serialNumber:string, xy_coordinates: {x:number, y:number, floor:number}, notes: string | null): Promise<void> {
   try {
     await axios.post(`${API_BASE_URL}/properties/${propertyId}/items`, {
-        name, image, notes, xy_coordinates, serial_number: serialNumber
+        category, image, notes, xy_coordinates, serial_number: serialNumber
     });
 
   } catch (error) {
