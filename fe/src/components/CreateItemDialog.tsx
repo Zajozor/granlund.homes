@@ -77,7 +77,7 @@ const CreateItemDialog = (props: { opened: boolean, onClose: () => void, xy_coor
         <Dialog.Root open={props.opened} onOpenChange={(x) => { if (x === false) props.onClose() }} >
 
             <Dialog.Content maxWidth="450px">
-                {loading ? <><span><Spinner /><br />Saving your file{dots}</span></> : <>
+                {loading ? <><span><Spinner /><br />Saving file{dots}</span></> : <>
 
                     <Dialog.Title>Add Item</Dialog.Title>
                     <Dialog.Description size="2" mb="4">
@@ -89,7 +89,7 @@ const CreateItemDialog = (props: { opened: boolean, onClose: () => void, xy_coor
                     <Flex direction="column" gap="3">
                         <label>
                             <Text as="div" size="2" mb="1" weight="bold">
-                                Name
+                                Manufacturer*
                             </Text>
                             <TextField.Root
                                 placeholder="SuperCooler 3000, ..."
@@ -98,7 +98,7 @@ const CreateItemDialog = (props: { opened: boolean, onClose: () => void, xy_coor
                         </label>
                         <label>
                             <Text as="div" size="2" mb="1" weight="bold">
-                                Serial Number
+                                Serial Number*
                             </Text>
                             <TextField.Root
                                 placeholder="Make sure to double check the serial"
@@ -107,7 +107,7 @@ const CreateItemDialog = (props: { opened: boolean, onClose: () => void, xy_coor
                         </label>
                         <label>
                             <Text as="div" size="2" mb="1" weight="bold">
-                                Maintenance Notes
+                                Condition & estimated value
                             </Text>
                             <TextField.Root
                                 placeholder="Enter any notes (optional)"

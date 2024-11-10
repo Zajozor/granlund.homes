@@ -60,21 +60,23 @@ const PropertyView = () => {
   return (
 		<>
 			<PropertyBanner property={propertyDetails} />
-			<Container style={{ flex: 1, display: 'flex', flexDirection: 'row' }} align='left'>
-      {loading
-      ? <Loader />
-      : (<>
-        <ItemsListView items={items} />
-        {isImage && Array.isArray(propertyDetails.image) && propertyDetails.image.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`Property ${index}`}
-            style={{ width: '100px', height: '100px' }}
-          />
-        ))}
-      </>)}
-			</Container>
+			<div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between'}}>
+        {loading
+        ? <Loader />
+        : (<>
+          <ItemsListView items={items} />
+          {isImage && propertyDetails.image.map((image, index) => (
+            <div key={index} style={{ paddingTop: '3vh', paddingRight: '2vw', width: '60vw', maxHeight: '60vw', overflow: 'hidden' }}>
+              <img
+                key={index}
+                src={image}
+                alt={`Property ${index}`}
+                style={{ width: '100%', height: '100%', objectFit: 'scale-down' }}
+              />
+            </div>
+          ))}
+        </>)}
+			</div>
 		</>
   );
 };

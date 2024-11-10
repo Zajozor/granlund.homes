@@ -26,16 +26,22 @@ const ItemCard = ({ item }: { item: Item }) => {
 
 export default ({ items }: { items: Items }) => {
 	const CategorySection = (category: keyof Items) => (
-		<Collapsible.Root key={category} defaultOpen={true} style={{ alignItems: 'flex-start', display: 'flex', paddingLeft: '2vw', flexDirection: 'column'}}>
-			<Collapsible.Trigger style={{ width: '30vw', alignItems: 'flex-start', color: 'rbg(105,115,00)', backgroundColor: 'blue'}}>
+		<Collapsible.Root
+			key={category}
+			defaultOpen={true}
+			style={{ alignItems: 'flex-start', display: 'flex', paddingLeft: '2vw', flexDirection: 'column' }}
+		>
+			<Collapsible.Trigger style={{ width: '30vw', alignItems: 'flex-start', color: 'rbg(105,115,00)', backgroundColor: 'blue' }}>
 				<Text size='2' weight='bold'>
 					{category}
 				</Text>
 			</Collapsible.Trigger>
 			<Collapsible.Content className='CollapsibleContent'>
-				{items[category].map((item) => <ItemCard key={item.uid} item={item} />)}
+				{items[category].map((item) => (
+					<ItemCard key={item.uid} item={item} />
+				))}
 			</Collapsible.Content>
 		</Collapsible.Root>
 	);
-	return <div style={{ overflow: 'hidden', height: '100vh' }}>{Object.keys(items).map((category) => CategorySection(category as keyof Items))}</div>;
+	return <div style={{ overflow: 'hidden', height: '100vh', paddingTop: '3vh' }}>{Object.keys(items).map((category) => CategorySection(category as keyof Items))}</div>;
 };

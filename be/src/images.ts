@@ -71,8 +71,13 @@ function extractJsonFromResponse(responseContent: string) {
 }
 
 export async function processImage(base64Image: string) {
-  const response = await queryOpenAI(base64Image);
-  const content = response.choices[0].message.content;
-  const jsonResponse = extractJsonFromResponse(content);
-  return jsonResponse;
+  try {
+    const response = await queryOpenAI(base64Image);
+    const content = response.choices[0].message.content;
+    const jsonResponse = extractJsonFromResponse(content);
+    return jsonResponse;
+  } catch (error) {
+    console.error(error);
+    return {};
+  }
 }
