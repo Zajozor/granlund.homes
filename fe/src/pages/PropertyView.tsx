@@ -64,6 +64,7 @@ const PropertyView = () => {
         ? <Loader />
         : (<>
           <ItemsListView items={items} />
+          <div style={{ flexDirection: 'column' }} >
           {isImage && propertyDetails.image.map((image, index) => (
             <div
               key={index}
@@ -85,6 +86,7 @@ const PropertyView = () => {
               />
             </div>
           ))}
+          </ div>
         </>)}
 			</div>
 		</>
