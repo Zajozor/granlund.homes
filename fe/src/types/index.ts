@@ -2,6 +2,7 @@ export type Property = {
   id: string;
   address: string;
   floors: number;
+  image: string[];
 };
 
 export type PropertyDetails = {
@@ -28,6 +29,22 @@ export type Item = {
   installationDate: Date;
   serialNumber: string;
 };
+
+export type RawItem = {
+    id: string;
+    xy_coordinates: {x: number, y: number, floor: number}
+    condition_notes: string;
+    image: string;
+    created_at: string
+    catalogue: {
+        name: string
+        serial_number: string
+        manufacturer: string;
+        category: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        other_data: any
+    }
+}
 
 export type NewProperty = {
   address: string;

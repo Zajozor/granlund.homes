@@ -9,8 +9,16 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4001;
 
-app.use(cors());
-app.use(express.json({ limit: '100mb' }));
+app.use(express.json({ limit: 100000000000 }));
+app.use(
+  express.urlencoded({
+
+    extended: true,
+    limit: 1000000000000,
+    parameterLimit: 50000,
+  }),
+);
+//app.use(cors());
 
 app.get('/', (_: Request, res: Response) => {
   res.send('Hello, Junction! This is our fancy API <3 granlund.homes');
@@ -45,6 +53,15 @@ app.get('/properties', async (_, res) => {
   res.json(properties.map(({ image, ...property }) => ({ ...property, floors: image.length })));
 });
 
+app.get('/properties/:id/items', async (req, res) => {
+  const items = (
+    await prisma.item.findMany({ where: { property_id: req.params.id }, include: { catalogue: true } })
+  ).map(item => {
+    return { ...item, image: item.image?.toString() ?? null };
+  });
+  res.json(items);
+});
+
 app.get('/properties/:id', async (req, res) => {
   const allItems = (
     await prisma.item.findMany({ where: { property_id: req.params.id }, include: { catalogue: true } })
@@ -58,28 +75,10 @@ app.get('/properties/:id', async (req, res) => {
     serialNumber: item.catalogue.serial_number,
     category: item.catalogue.category
   }));
-  const cata = await prisma.catalogue.create({
-    data: {
-      serial_number: '1242',
-      name: 'super-huge-washing-mashine',
-      category: 'appliances',
-      manual_url: '',
-      other_data: {},
-      manufacturer: ''
-    }
-  });
-  await prisma.item.create({
-    data: {
-      property_id: req.params.id,
-      xy_coordinates: { x: 100, y: 100 },
-      //catalogue: {}
-      condition_notes: '',
-      catalogue_id: cata.id
-    }
-  });
+  const { image, ...property } = await prisma.property.findFirstOrThrow({ where: { id: req.params.id } });
 
   res.json({
-    property: await prisma.property.findFirst({ where: { id: req.params.id } }),
+    property: { image: image.map(i => i.toString()), ...property },
     items: {
       electric: allItems.filter(item => item.category === 'electric'),
       hvac: allItems.filter(item => item.category === 'hvac'),
@@ -124,6 +123,15 @@ app.get('/properties/:id/items', async (req, res) => {
   );
 });
 
+app.delete('/items/:id', async (req, res) => {
+  await prisma.item.delete({
+    where: {
+      id: req.params.id
+    }
+  });
+  res.json({ result: 'ok' });
+});
+
 app.post('/properties/:id/items', async (req, res) => {
   const property = await prisma.property.findFirst({
     where: {
@@ -140,7 +148,7 @@ app.post('/properties/:id/items', async (req, res) => {
   const catalogue = await prisma.catalogue.create({
     data: {
       id: randomUUID().toString(),
-      serial_number: imageInfo?.serial_number || '',
+      serial_number: req.body.serial_number || imageInfo?.serial_number || '',
       name: req.body.name || imageInfo?.name || '-',
       category: imageInfo?.category || '',
       manufacturer: req.body.manufacturer || imageInfo?.manufacturer || '-',
@@ -156,7 +164,7 @@ app.post('/properties/:id/items', async (req, res) => {
       catalogue_id: catalogue.id,
       property_id: property.id,
       xy_coordinates: req.body.xy_coordinates,
-      condition_notes: ''
+      condition_notes: req.body.notes || ''
     }
   });
   res.json({ catalogue, item: { ...restItem, image: image?.toString() } });

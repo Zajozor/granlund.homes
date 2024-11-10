@@ -1,208 +1,123 @@
-import { useRef, useState, useEffect } from "react";
-import styled from "styled-components";
+import {  useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import { ImageOverlay, MapContainer, Marker, Popup,  useMapEvents } from 'react-leaflet';
+import { deleteItem, getItems, getProperty } from '../api/index';
+import { Box, Button, Spinner, Tabs } from '@radix-ui/themes';
+import { LatLngBounds } from 'leaflet';
+import { RawItem } from '../types';
+import CreateItemDialog from '../components/CreateItemDialog';
 
-import LightBulb from "../assets/light-bulb.svg";
-import Pillar from "../assets/pillar.svg";
-import Pipeline from "../assets/pipeline.svg";
-import Thunder from "../assets/thunder.svg";
-import Ventilation from "../assets/ventilation.svg";
 
-const Container = styled.div`
-  background: black;
-`;
+function MarkCreator({createMark, floor}: {createMark: (lat:number, lng:number, floor:number) => void, floor:number}) {
+  const map = useMapEvents({
+    dblclick(e) {
+        createMark(e.latlng.lat, e.latlng.lng, floor)
+        map.flyTo(e.latlng)
+    },
+  })
+  return <></>
 
-const ItemList = styled.div`
-  display: flex;
-  background: white;
-  width: 100%;
-  justify-content: center;
-  gap: 1rem;
-  padding: 4px 0;
-  height: 5vh;
-
-  img {
-    height: 100%;
-    aspect-ratio: 1;
-    cursor: pointer;
-  }
-`;
-
-const InputContainer = styled.div`
-  height: 5vh;
-  margin-top: 5vh;
-`;
-
-const svgFiles = [
-  { id: "light-bulb", src: LightBulb },
-  { id: "pillar", src: Pillar },
-  { id: "pipeline", src: Pipeline },
-  { id: "thunder", src: Thunder },
-  { id: "ventilation", src: Ventilation },
-];
-
-const isMouseWithinImageBounds = (mousePos, pos) => {
-  return (
-    mousePos.x >= pos.x - 2 * pos.width &&
-    mousePos.x <= pos.x + 2 * pos.width &&
-    mousePos.y >= pos.y - 2 * pos.height &&
-    mousePos.y <= pos.y + 2 * pos.height
-  );
-};
+}
 
 const FloorPlan = () => {
-  const canvasRef = useRef(null);
-  const [positions, setPositions] = useState([]);
-  const [dragging, setDragging] = useState(false);
-  const [draggedImageIndex, setDraggedImageIndex] = useState(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const svgImages = useRef([]);
-  const backgroundImage = useRef(new Image());
+     const { id: propertyId } = useParams()
+    
+     const [floorPlans, setFloorPlans] = useState<string[]>([])
+     const [items, setItems] = useState<RawItem[]>([])
+     const [creatingItem, setCreatingItem] = useState<boolean>(false)
+     const [clickCoords, setClickCoords] = useState<{x:number, y:number,floor:number} | null>(null)
 
-  const addItemToCanvas = (id) => {
-    setPositions((positions) => [
-      ...positions,
-      { id, x: 300, y: 300, width: 25, height: 25 },
-    ]);
-  };
 
-  // Handle floor plan upload
-  const handleFloorPlanUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        backgroundImage.current.src = e.target.result;
-        backgroundImage.current.onload = () => {
-          drawCanvas({ removeExistingItems: true });
-        };
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+     const createMark = useCallback((lat:number, lng:number, floor: number) =>
+                                    {
+                                        setClickCoords({x:lat, y:lng, floor})
+                                        setCreatingItem(true)
 
-  useEffect(() => {
-    svgImages.current = svgFiles.map(({ src }) => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
-  }, []);
+                                        //setItems([...items, {id: 'f', image: '', condition_notes: '', xy_coordinates: {x:lat, y:lng, floor}, created_at: 'trr'}])
+                                    }, [ setClickCoords, setCreatingItem])
 
-  const drawCanvas = (prop?) => {
-    const removeExistingItems = prop?.removeExistingItems;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
 
-    const img = backgroundImage.current;
-    const imgAspectRatio = img.width / img.height;
-    const canvasAspectRatio = canvas.width / canvas.height;
+    const deleteMark = useCallback((id: string) => {
+        setItems(items.filter(i => i.id !== id ))
+        deleteItem(id)
+    }, [setItems, items])
 
-    let drawWidth, drawHeight, offsetX, offsetY;
+     useEffect(() => {
+         if (!propertyId) return;
+         (async () =>{
+             const p = await getProperty(propertyId)
 
-    if (canvasAspectRatio > imgAspectRatio) {
-      drawHeight = canvas.height;
-      drawWidth = img.width * (canvas.height / img.height);
-      offsetX = (canvas.width - drawWidth) / 2;
-      offsetY = 0;
-    } else {
-      drawWidth = canvas.width;
-      drawHeight = img.height * (canvas.width / img.width);
-      offsetX = 0;
-      offsetY = (canvas.height - drawHeight) / 2;
-    }
+             setFloorPlans(p.property.image)
+         })()
+     }, [propertyId])
 
-    context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+     const reloadItems = useCallback(async() => {
+         if (!propertyId) return;
+             const its = await getItems(propertyId)
+             setItems(its)
+         },[setItems, propertyId])
 
-    if (removeExistingItems) {
-      return setPositions([]);
-    }
+     useEffect(() => {
+         reloadItems()
+     }, [reloadItems])
 
-    positions.forEach((pos) => {
-      const img = new Image();
-      img.src = svgFiles.find((item) => item.id === pos.id).src;
-      img.onload = () => {
-        context.drawImage(img, pos.x, pos.y, 25, 25);
-      };
-    });
-  };
 
-  const savePositions = (newPositions) => {
-    localStorage.setItem("canvasPositions", JSON.stringify(newPositions));
-  };
+     if (floorPlans.length === 0) return <Spinner /> 
+const bounds = new LatLngBounds([-1, -1], [1, 1])
 
-  const handleMouseDown = (e) => {
-    const mousePos = { x: e.clientX, y: e.clientY };
-    positions.forEach((pos, index) => {
-      if (isMouseWithinImageBounds(mousePos, pos)) {
-        setDragging(true);
-        setDraggedImageIndex(index);
-        setOffset({ x: mousePos.x - pos.x, y: mousePos.y - pos.y });
-      }
-    });
-  };
+return <><Tabs.Root defaultValue="0">
+<Tabs.List>
+{floorPlans.map((_, idx) => 
+    <Tabs.Trigger key={idx.toString()} value={idx.toString()}>Floor {idx+1}</Tabs.Trigger>
+)}
+    </Tabs.List>
 
-  const handleMouseMove = (e) => {
-    if (dragging && draggedImageIndex !== null) {
-      const mousePos = { x: e.clientX, y: e.clientY };
-      const newPositions = [...positions];
-      newPositions[draggedImageIndex] = {
-        ...newPositions[draggedImageIndex],
-        x: mousePos.x - offset.x,
-        y: mousePos.y - offset.y,
-      };
+<Box pt="3">
 
-      setPositions(newPositions);
-      drawCanvas();
-    }
-  };
+{floorPlans.map((floor, idx) =>
+                <Tabs.Content key={idx.toString()} value={idx.toString()}>
+    <MapContainer style={{height: '90vh'}} center={[0, 0]} zoom={8} doubleClickZoom={false} >
+    <MarkCreator createMark={createMark} floor={idx}/>
+    <ImageOverlay
+    url={floor}
+    bounds={bounds}
+    opacity={1}
+    zIndex={10}
+    />
+    {items.filter(item => item.xy_coordinates.floor === idx).map(item => 
+                   <Marker key={item.id} position={[item.xy_coordinates.x, item.xy_coordinates.y]}>
+                   <Popup closeButton={true} >
+                   {item.catalogue.name} [{item.catalogue.manufacturer}]
+                   <br />
 
-  const handleMouseUp = () => {
-    if (dragging) {
-      setDragging(false);
-      setDraggedImageIndex(null);
-      savePositions(positions);
-    }
-  };
+                   Condition: {item.condition_notes || '-'}<br />
+                   <img src={item.image} width="100%" />
+                   <br />
 
-  useEffect(() => {
-    drawCanvas();
-  }, [positions]);
+                    Added on: {new Date(item.created_at).toDateString()}
+                        <ul>
+                        {Object.entries(item.catalogue.other_data).filter(([,value]) => Array.isArray(value) || typeof value === 'string').splice(0, 6).map(([key, value]) => <li key={key}>
+                                                                       {key.split('_').map((word) => { 
+    return word[0].toUpperCase() + word.substring(1); 
+}).join(' ')}: { Array.isArray(value) ? value.join(' ') : (typeof value !== 'object' ? 
+    JSON.stringify(value) : '-' )
+}
+                                                                       </li>)}
+                        </ul>
+                    <br />
+                    <Button onClick={() => deleteMark(item.id)} color="red" size="1">Remove</Button> 
+                       </Popup>
+                   </Marker>
+                  )}
+             </MapContainer>
+                </Tabs.Content>
+               )}
+               </Box>
 
-  return (
-    <Container>
-      <canvas
-        ref={canvasRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        style={{
-          display: "block",
-          height: "85vh",
-          margin: "auto",
-        }}
-      />
-      <InputContainer>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFloorPlanUpload}
-          style={{ marginBottom: "10px" }}
-        />
-      </InputContainer>
-      <ItemList>
-        {svgFiles.map(({ src, id }) => (
-          <img
-            key={id}
-            src={src}
-            onClick={() => addItemToCanvas(id)}
-            alt={id}
-          />
-        ))}
-      </ItemList>
-    </Container>
-  );
+
+</Tabs.Root>
+{clickCoords && <CreateItemDialog opened={creatingItem} onClose={() => { setCreatingItem(false); reloadItems()}} xy_coordinates={clickCoords}/>}
+</>
 };
 
 export default FloorPlan;

@@ -36,7 +36,9 @@ async function queryOpenAI(base64Image: string) {
                 - non_technical_summary
                 - technical_description
                 - technical_description_json,
-                - additional_information`
+                - additional_information
+
+                remember entire response is a valid JSON, no comments`
           },
           {
             type: 'image_url',
@@ -64,7 +66,7 @@ function extractJsonFromResponse(responseContent: string) {
   if (match) {
     return JSON.parse(match[1].trim());
   } else {
-    throw new Error('No JSON content found in the response content');
+    return {};
   }
 }
 

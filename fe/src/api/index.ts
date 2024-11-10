@@ -1,5 +1,5 @@
 // api.ts
-import { Property, PropertyDetails, Items, Item, NewProperty, CreatePropertyResponse } from '../types';
+import { Property, PropertyDetails, Items, Item, NewProperty, CreatePropertyResponse, RawItem } from '../types';
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4001' : 'https://granlund.homes/api';
@@ -49,10 +49,45 @@ export async function getProperty(id: string | number): Promise<PropertyDetails>
   }
 }
 
+export async function getItems(id: string): Promise<RawItem[]> {
+  try {
+    const response = await axios.get<RawItem[]>(`${API_BASE_URL}/properties/${id}/items`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching items with id ${id}:`, error);
+    throw error;
+  }
+
+}
+
 export async function createProperty(newProperty: NewProperty): Promise<CreatePropertyResponse> {
   try {
     const response = await axios.post<CreatePropertyResponse>(`${API_BASE_URL}/properties/create`, newProperty);
     return response.data;
+  } catch (error) {
+    console.error('Error creating property:', error);
+    throw error;
+  }
+}
+
+
+export async function createItem(propertyId: string, name:string, image:string, serialNumber:string, xy_coordinates: {x:number, y:number, floor:number}, notes: string | null): Promise<void> {
+  try {
+    await axios.post(`${API_BASE_URL}/properties/${propertyId}/items`, {
+        name, image, notes, xy_coordinates, serial_number: serialNumber
+    });
+
+  } catch (error) {
+    console.error('Error creating property:', error);
+    throw error;
+  }
+}
+
+export async function deleteItem(itemId: string): Promise<void> {
+  try {
+    await axios.delete(`${API_BASE_URL}/items/${itemId}`, {
+    });
+
   } catch (error) {
     console.error('Error creating property:', error);
     throw error;
