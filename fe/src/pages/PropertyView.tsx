@@ -26,7 +26,7 @@ const PropertyBanner = ({ property }: { property: Property }) => {
 
   return (
     <HeaderThemedView key={property.id}>
-      <Text as="p" size="2">{name}</Text>
+      <Text as="p" size="2">Property: {name}</Text>
       <Button size="3" variant="soft" onClick={() => openProperty()}>
         Open Inspector
       </Button>
@@ -65,12 +65,23 @@ const PropertyView = () => {
         : (<>
           <ItemsListView items={items} />
           {isImage && propertyDetails.image.map((image, index) => (
-            <div key={index} style={{ paddingTop: '3vh', paddingRight: '2vw', width: '60vw', maxHeight: '60vw', overflow: 'hidden' }}>
+            <div
+              key={index}
+              style={{
+              paddingTop: '3vh',
+              paddingRight: '2vw',
+              width: '60vw',
+              maxHeight: window.innerWidth > 768 ? '80vh' : '200vh',
+              overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
               <img
-                key={index}
-                src={image}
-                alt={`Property ${index}`}
-                style={{ width: '100%', height: '100%', objectFit: 'scale-down' }}
+              key={index}
+              src={image}
+              alt={`Property ${index}`}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </div>
           ))}

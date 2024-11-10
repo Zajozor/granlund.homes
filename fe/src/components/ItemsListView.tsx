@@ -5,13 +5,14 @@ import '../App.css';
 import { Box, Text, Card } from '@radix-ui/themes';
 import { Items, Item } from '../types';
 
+const RowSet = ({left, right}: {left: string, right?: string | null}) => (
+	<>
+		<Text as="div" size="2" weight="bold">{left}</Text>
+		{right ? <Text as="div" size="2">{right}</Text> : null}
+	</>
+);
+
 const ItemCard = ({ item }: { item: Item }) => {
-	const RowSet = ({left, right}: {left: string, right?: string | null}) => (
-		<>
-			<Text as="div" size="2" weight="bold">{left}</Text>
-			{right ? <Text as="div" size="2">{right}</Text> : null}
-		</>
-	);
 
 	const installationDate = item.installationDate ? item.installationDate.toDateString() : null;
 	return (
@@ -29,7 +30,7 @@ export default ({ items }: { items: Items }) => {
 		<Collapsible.Root
 			key={category}
 			defaultOpen={true}
-			style={{ alignItems: 'flex-start', display: 'flex', paddingLeft: '2vw', flexDirection: 'column' }}
+			style={{ alignItems: 'flex-start', display: 'flex', paddingLeft: '2vw', flexDirection: 'column', paddingBottom: '0.167vh' }}
 		>
 			<Collapsible.Trigger style={{ width: '30vw', alignItems: 'flex-start', color: 'rbg(105,115,00)', backgroundColor: 'blue' }}>
 				<Text size='2' weight='bold'>
