@@ -16,17 +16,6 @@ const BuildingItem = styled.div`
   border-radius: 8px;
   margin-bottom: 1rem;
   `;
-  
-  const BuildingsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const BodyContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
 
 const PropertyBanner = ({ property }: { property: Property }) => {
   return (
@@ -106,17 +95,15 @@ const BuildingsList = () => {
   }, []);
 
   return (
-    <BuildingsContainer>
-      <PropertyBanner property={property} />
-      <BodyContainer>
-        <Container style={{ flex: 1}} align='left'>
-          <ItemsCategoryList items={items} />
-        </Container>  
-        <Container style={{ flex: 4}}>
-          <Box style={{ display: 'flex' }} />
-        </Container>  
-      </BodyContainer>
-    </BuildingsContainer>
+		<>
+			<PropertyBanner property={property} />
+			<Container style={{ flex: 1, display: 'flex', flexDirection: 'row' }} align='left'>
+				<ItemsCategoryList items={items} />
+			</Container>
+			<Container style={{ flex: 4 }}>
+				<Box style={{ display: 'flex' }} />
+			</Container>
+		</>
   );
 };
 

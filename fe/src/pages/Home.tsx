@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Box, Text, TextField } from '@radix-ui/themes';
+import { Box, Text, TextField } from '@radix-ui/themes';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Link } from 'react-router-dom'; // For navigation to edit/view pages
 import { getProperties } from '../api/index';
 import { Property } from '../types';
+import { compareTwoStrings } from 'string-similarity';
+
 import CreatePropertyDialog from '../components/CreatePropertyDialog';
+import PropertyListItem from '../components/PropertyListItem';
 
 const Header = () => (
   <div>
@@ -14,77 +16,85 @@ const Header = () => (
   </div>
 );
 
-const PropertyCard = ({ property }: { property: Property }) => {
-  const { address, id, floors } = property;
-  const isPropertiesAdded = address !== undefined;
-  const text = isPropertiesAdded ? address : 'No properties added';
+const PropertyList = ({ properties, search }: { properties: Property[], search: string }) => {
+  const filteredBuildings = properties
+  .filter((property) => compareTwoStrings(property.address.toLowerCase(), search.toLowerCase()) > 0.3)
+  .sort((a, b) => a.address.localeCompare(b.address));
 
-  const ActionsButtons = () => (
-    <Box>
-      <Link to={`/properties/${id}`}>
-        <Button size="2" variant="soft">
-          Open
-        </Button>
-      </Link>
-    </Box>
-  );
+  const isPropertiesAdded = properties.length > 0;
+  const isSearch = search.length > 1;
+  const isResults = filteredBuildings.length > 0
 
-  return (
-    <div className='listItem' key={property.id}>
-      <Box>
-        <Text as="p" size="2">
-         {text} ({floors} floor{floors !== 1 ? 's': ''})
-        </Text>
-      </Box>
-      {isPropertiesAdded ? <ActionsButtons /> : null}
-    </div>
-  );
+  if (!isPropertiesAdded) {
+    return <p>No properties added</p>
+  }
+
+  if (isSearch && !isResults) {
+      return <p>Found 0 properties matching '{search}'.</p>
+  } else if (isSearch && isResults) {
+    return filteredBuildings.map((property) => <PropertyListItem key={property.id} property={property} />)
+  } else {
+    return properties.map((property) => <PropertyListItem key={property.id} property={property} />)
+  }
 };
 
 const BuildingsList = () => {
   const [buildings, setBuildings] = useState<Property[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
   const updateShownBuildings = async () => {
+    setLoading(true);
     const buildings = await getProperties();
     setBuildings(buildings);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setLoading(false);
   };
 
   useEffect(() => {
     updateShownBuildings()
   }, []);
 
-  const PropertyList = () => {
+  const Loader = () => {
+    const [dots, setDots] = useState<string>('.');
 
-    if (buildings.length === 0) {
-        return <p>No properties added</p>
-    }
+    useEffect(() => {
+      const interval = setInterval(() => {
+      setDots((prev) => (prev.length < 3 ? prev + '.' : '.'));
+      }, 300);
+      return () => clearInterval(interval);
+    }, []);
 
-    return(
-      buildings.map((property) => (
-        <PropertyCard key={property.id} property={property} />
-      ))
-    )
+    return (
+      <div>
+      <Text as="p" size="2" color='blue'>
+        [{dots}]
+      </Text>
+      </div>
+    );
   };
 
-  const SearchBar = () => (
-    <div style={{ display: 'flex', flexDirection: 'row', width: '60%', gap: 28 }}>
-      <TextField.Root placeholder="Type address…" style={{flex: 3}}>
+  const SearchBar = (
+    <div className='searchBarContainer'>
+      <TextField.Root radius="full" variant='soft' size='3' placeholder="Type address…" style={{flex: 3}} value={search} onChange={(e) => setSearch(e.target.value)}>
         <TextField.Slot>
-          <MagnifyingGlassIcon height="16" width="16" />
+          <MagnifyingGlassIcon height="18" width="18" />
         </TextField.Slot>
       </TextField.Root>
-      <CreatePropertyDialog />
+      <CreatePropertyDialog callback={async () => await updateShownBuildings()}/>
     </div>
   );
 
   return (
     <div className="page">
-      <Box height="200px" />
+      <Box height="15vh" />
       <Header />
-      <Box height="100px" />
-      <SearchBar />
-      <Box height="200px" />
-      <PropertyList />
+      <Box height="10vh" />
+      {SearchBar}
+      <Box height="10vh" />
+      {loading ?
+      <Loader />
+      : <PropertyList properties={buildings} search={search} />}
     </div>
   );
 };

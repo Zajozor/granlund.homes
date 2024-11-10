@@ -1,3 +1,15 @@
+.searchBarContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 60%; /* Adjust as needed */
+  gap: 28px; /* Adjust the spacing between items */
+}
+
+.divider {
+  height: "200px";
+}
+
 .CollapsibleRoot {
   background-color: #333;
   border-radius: 8px;
@@ -21,7 +33,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #555;
+  width: 50%;
   gap: 16px;
 }
 
@@ -63,4 +75,20 @@
 
 body {
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .searchBarContainer {
+    height: 100px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    width: 90%;
+    gap: 16px;
+  }
 }

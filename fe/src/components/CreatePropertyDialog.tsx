@@ -12,7 +12,7 @@ import { createProperty } from '../api';
     })
   }
 
-const CreatePropertyDialog = () => {
+const CreatePropertyDialog = ({ callback }: { callback: () => void }) => {
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -30,6 +30,7 @@ const CreatePropertyDialog = () => {
       await createProperty({ address, images });
       setOpen(false);
       setAlert(null);
+      callback();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setAlert(error.message);
@@ -39,7 +40,7 @@ const CreatePropertyDialog = () => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
         const results: string[] = []
-        for (const file of e.target.files|| [])  {
+        for (const file of e.target.files || [])  {
                 console.log('adding one')
                 const base64: string = await createBase64Image(file) as string;
                 results.push(base64)
@@ -51,9 +52,9 @@ const CreatePropertyDialog = () => {
   const ImageInputButton = () => (
     <>
       <input type="file" multiple onChange={(e) => handleFileChange(e)} />
-      {images.length >0 && <>
+      {images.length > 0 && <>
           <p>{images.length} floor plans selected.</p>
-          <Button  onClick={() => setImages([])}>Remove selected files</Button>
+          <Button onClick={() => setImages([])}>Remove selected files</Button>
       </>}
     </>
   );
@@ -67,7 +68,7 @@ const CreatePropertyDialog = () => {
       <Dialog.Content maxWidth="450px">
         <Dialog.Title>Edit profile</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Make changes to your profile.
+          Add a property to your portfolio.
           {alert && <Text as='p' size="2" color="red">{alert}</Text>}
         </Dialog.Description>
 
