@@ -16,6 +16,9 @@ const HeaderThemedView = styled.div`
   gap: 5rem;
   padding-right: 2rem;
   align-items: center;
+  position: absolute;
+  top: 1.67vh;
+  right: 0;
   `;
 
 const PropertyBanner = ({ property }: { property: Property }) => {  
@@ -37,6 +40,8 @@ const PropertyView = () => {
   const [propertyDetails, setPropertyDetails] = useState<Property>({});
   const [items, setItems] = useState<Items>({});
   const [loading, setLoading] = useState(false);
+  const isImage = Boolean(propertyDetails.image);
+  
 
   const updateShownBuildings = async () => {
     if (propertyId) {
@@ -60,7 +65,14 @@ const PropertyView = () => {
       ? <Loader />
       : (<>
         <ItemsListView items={items} />
-        <div style={{ height: '100vh', width: '50vw' }} />
+        {isImage && Array.isArray(propertyDetails.image) && propertyDetails.image.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Property ${index}`}
+            style={{ width: '100px', height: '100px' }}
+          />
+        ))}
       </>)}
 			</Container>
 		</>

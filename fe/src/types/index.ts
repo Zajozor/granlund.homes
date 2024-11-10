@@ -1,7 +1,7 @@
 export type Property = {
   id: string;
   address: string;
-  floors: number;
+  image: Array<string>;
 };
 
 export type PropertyDetails = {
