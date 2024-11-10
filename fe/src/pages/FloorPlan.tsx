@@ -76,7 +76,7 @@ return <><Tabs.Root defaultValue="0">
 
 {floorPlans.map((floor, idx) =>
                 <Tabs.Content key={idx.toString()} value={idx.toString()}>
-    <MapContainer style={{height: '90vh'}} center={[0, 0]} zoom={8} doubleClickZoom={false} >
+    <MapContainer style={{height: '75vh'}} center={[0, 0]} zoom={8} doubleClickZoom={false} >
     <MarkCreator createMark={createMark} floor={idx}/>
     <ImageOverlay
     url={floor}
