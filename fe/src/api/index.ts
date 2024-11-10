@@ -2,7 +2,7 @@
 import { Property, PropertyDetails, Items, Item, NewProperty, CreatePropertyResponse } from '../types';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:4001';
+const API_BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:4001' : 'https://granlund.homes/api';
 
 // Set default axios configuration
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -19,9 +19,9 @@ export async function getHello(): Promise<string> {
   }
 }
 
-export async function getProperties(): Promise<Property> {
+export async function getProperties(): Promise<Property[]> {
   try {
-    const response = await axios.get<Property>(`${API_BASE_URL}/properties`);
+    const response = await axios.get<Property[]>(`${API_BASE_URL}/properties`);
     return response.data;
   } catch (error) {
     console.error('Error fetching properties:', error);

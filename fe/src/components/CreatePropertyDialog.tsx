@@ -1,43 +1,53 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Dialog, Button, Text, TextField, Flex } from '@radix-ui/themes';
-import { createProperty } from '../api';
+import { createProperty } from '../api/index';
+
+  const createBase64Image = (file :File) => {
+    const reader = new FileReader();
+    return new Promise(function (resolve) {
+      reader.onload = function (event) {
+        resolve(event.target?.result)
+      }
+      reader.readAsDataURL(file);
+    })
+  }
 
 const CreatePropertyDialog = () => {
   const [open, setOpen] = useState(false);
   const [address, setAddress] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [alert, setAlert] = useState<String | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [alert, setAlert] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!address || !image) {
-      console.log('Please fill in all fields', address, image);
+    if (!address || !images) {
+      console.log('Please fill in all fields', address);
       
       setAlert('Please fill in all fields');
       return;
     }
 
     try {
-      await createProperty({ address, image });
+      await createProperty({ address, images });
       setOpen(false);
       setAlert(null);
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       setAlert(error.message);
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-  const ImageInputButton = () => {
-    if (image) {
-      return <Button  onClick={() => setImage(null)}>Remove image</Button>;
-    } else {
-      return <input type="file" onChange={(e) => handleFileChange(e)} />
+        const results: string[] = []
+        for (const file of e.target.files|| [])  {
+                console.log('adding one')
+                const base64: string = await createBase64Image(file) as string;
+                results.push(base64)
+        }
+    setImages(results)
     }
   }
+
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -66,7 +76,13 @@ const CreatePropertyDialog = () => {
             <Text as="div" size="2" mb="1" weight="bold">
               Floor plan
             </Text>
-           <ImageInputButton />
+            <>
+              <input type="file" multiple onChange={(e) => handleFileChange(e)} />
+              {images.length >0 && <>
+                  <p>{images.length} floor plans selected.</p>
+                  <Button  onClick={() => setImages([])}>Remove selected files</Button>
+              </>}
+            </>
           </label>
         </Flex>
 

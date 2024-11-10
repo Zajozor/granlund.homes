@@ -1,6 +1,7 @@
 export type Property = {
   id: string;
   address: string;
+  floors: number;
 };
 
 export type PropertyDetails = {
@@ -34,7 +35,7 @@ export type Item = {
 
 export type NewProperty = {
   address: string;
-  image: File | null; // Assuming image is a base64-encoded string or a URL
+  images: string[]; // Assuming image is a base64-encoded string or a URL
 };
 
 export type CreatePropertyResponse = {

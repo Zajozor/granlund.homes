@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import { Button, Box, Text, TextField } from "@radix-ui/themes";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom"; // For navigation to edit/view pages
-import { Loader } from "../components/Loader";
-import { getProperties } from "../api";
-import { Property } from "../types";
-import CreatePropertyDialog from "../components/CreatePropertyDialog";
+import { useEffect, useState } from 'react';
+import { Button, Box, Text, TextField } from '@radix-ui/themes';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { Link } from 'react-router-dom'; // For navigation to edit/view pages
+import { getProperties } from '../api/index';
+import { Property } from '../types';
+import CreatePropertyDialog from '../components/CreatePropertyDialog';
 
 const Header = () => (
   <div>
@@ -14,9 +13,9 @@ const Header = () => (
 );
 
 const PropertyCard = ({ property }: { property: Property }) => {
-  const { address, id } = property;
+  const { address, id, floors } = property;
   const isPropertiesAdded = address !== undefined;
-  const text = isPropertiesAdded ? address : "No properties added";
+  const text = isPropertiesAdded ? address : 'No properties added';
 
   const ActionsButtons = () => (
     <Box>
@@ -32,7 +31,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
     <div className='listItem' key={property.id}>
       <Box>
         <Text as="p" size="2">
-         {text}
+         {text} ({floors} floor{floors !== 1 ? 's': ''})
         </Text>
       </Box>
       {isPropertiesAdded ? <ActionsButtons /> : null}
@@ -60,7 +59,7 @@ const BuildingsList = () => {
   const PropertyList = () => {
 
     if (buildings.length === 0) {
-      return <PropertyCard property={{}} />
+        return <p>No properties added</p>
     }
 
     return(

@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { randomUUID } from 'crypto';
 import { PrismaClient } from '@prisma/client';
+import { processImage } from './images';
 
 const prisma = new PrismaClient();
 
@@ -9,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 4001;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '100mb' }));
 
 app.get('/', (_: Request, res: Response) => {
   res.send('Hello, Junction! This is our fancy API <3 granlund.homes');
@@ -20,22 +21,35 @@ app.post('/properties/create', async (req, res) => {
     data: {
       id: randomUUID().toString(),
       address: req.body.address,
-      image: [Buffer.from(req.body.image)]
+
+      image: req.body.images.map((image: string) => Buffer.from(image))
     }
   });
-  res.json(property);
+  const { image, ...rest } = property;
+  res.json({ image: image.map((i: Buffer) => i.toString()), ...rest });
 });
 
 // List all properties
 app.get('/properties', async (_, res) => {
-  const properties = await prisma.property.findMany();
-  res.json(properties);
+  const properties = await prisma.property.findMany({
+    select: {
+      id: true,
+      address: true,
+      created_at: true,
+      image: true
+    },
+
+    orderBy: { created_at: 'desc' }
+  });
+
+  res.json(properties.map(({ image, ...property }) => ({ ...property, floors: image.length })));
 });
 
 app.get('/properties/:id', async (req, res) => {
   const allItems = (
     await prisma.item.findMany({ where: { property_id: req.params.id }, include: { catalogue: true } })
   ).map(item => ({
+    id: item.id,
     coordinates: !item.xy_coordinates
       ? ''
       : (item.xy_coordinates as unknown as { x: string }).x + ',' + (item.xy_coordinates as unknown as { y: string }).y,
@@ -102,7 +116,12 @@ app.get('/properties/:id/items', async (req, res) => {
       issues: true
     }
   });
-  res.json(items);
+  res.json(
+    items.map(item => {
+      const { image, ...restItem } = item;
+      return { image: image?.toString(), ...restItem };
+    })
+  );
 });
 
 app.post('/properties/:id/items', async (req, res) => {
@@ -116,28 +135,31 @@ app.post('/properties/:id/items', async (req, res) => {
     res.json({ error: 'property not found' });
     return;
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const imageInfo: any = req.body.image ? await processImage(req.body.image) : {};
   const catalogue = await prisma.catalogue.create({
     data: {
       id: randomUUID().toString(),
-      serial_number: '47',
-      name: req.body.name || '-',
-      category: 'heater',
-      manufacturer: req.body.manufacturer || '-',
+      serial_number: imageInfo?.serial_number || '',
+      name: req.body.name || imageInfo?.name || '-',
+      category: imageInfo?.category || '',
+      manufacturer: req.body.manufacturer || imageInfo?.manufacturer || '-',
 
-      other_data: {},
-      manual_url: 'https://manual'
+      other_data: imageInfo?.other_data || {},
+      manual_url: imageInfo?.manual_url || ''
     }
   });
-  const item = await prisma.item.create({
+  const { image, ...restItem } = await prisma.item.create({
     data: {
       id: randomUUID().toString(),
+      image: Buffer.from(req.body.image),
       catalogue_id: catalogue.id,
       property_id: property.id,
-      xy_coordinates: { x: 100, y: 100 },
+      xy_coordinates: req.body.xy_coordinates,
       condition_notes: ''
     }
   });
-  res.json({ catalogue, item });
+  res.json({ catalogue, item: { ...restItem, image: image?.toString() } });
 });
 
 if (process.env.NODE_ENV !== 'test') {
