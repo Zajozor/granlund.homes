@@ -1,7 +1,7 @@
 import '../App.css';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; 
-import { Container, Button, Text } from "@radix-ui/themes";
+import { Button, Text } from "@radix-ui/themes";
 import styled from "styled-components";
 import { getProperty } from "../api";
 import { Items, Property } from "../types";
@@ -16,7 +16,6 @@ const HeaderThemedView = styled.div`
   gap: 5rem;
   padding-right: 2rem;
   align-items: center;
-  position: absolute;
   top: 1.67vh;
   right: 0;
   `;
