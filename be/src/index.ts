@@ -12,13 +12,12 @@ const PORT = process.env.PORT || 4001;
 app.use(express.json({ limit: 100000000000 }));
 app.use(
   express.urlencoded({
-
     extended: true,
     limit: 1000000000000,
-    parameterLimit: 50000,
-  }),
+    parameterLimit: 50000
+  })
 );
-//app.use(cors());
+app.use(cors());
 
 app.get('/', (_: Request, res: Response) => {
   res.send('Hello, Junction! This is our fancy API <3 granlund.homes');

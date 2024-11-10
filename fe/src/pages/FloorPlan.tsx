@@ -12,7 +12,6 @@ function MarkCreator({createMark, floor}: {createMark: (lat:number, lng:number, 
   const map = useMapEvents({
     dblclick(e) {
         createMark(e.latlng.lat, e.latlng.lng, floor)
-        map.flyTo(e.latlng)
     },
   })
   return <></>
